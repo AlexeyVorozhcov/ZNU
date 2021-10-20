@@ -1,14 +1,54 @@
+{% load  static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <link href="styles.css" rel="stylesheet" >
+    <link href="{% static '/styles.css' %}" rel="stylesheet">
     <title>Главная</title>
 </head>
 
 
 <body>
-    <a href="zayavki.html">Сервис "Заявки на уценку"</a>
+    <div class="container">
+        <h1>Главная страница</h1>
+        <div class="autorisation">
+            <div class="autorisation-login">
+                <!-- <form action="/">
+                    <label for="name">Логин:</label>
+                    <input type="text" id="name" placeholder="e-mail">
+                    <label for="password">Пароль:</label>
+                    <input class="pass" type="password" id="password">
+                    <input type="submit" value="Войти">
+                </form> -->
+                <form action="/">
+                    Пользователь: Нижний Новгород 7 Небо
+                    <input type="submit" value="Выйти">
+                </form>
+            </div>
+            <div class="autorisation-about">
+                Роль: магазин
+                <br>
+                Статус: активный
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="email">
+            <form class="form-email" action="/">
+                <label for="email">E-mail: </label>
+                <input type="email" id="email" value="nnovgorod@gamepark.ru">
+                <input class="btn" type="submit" value="Сохранить">
+            </form>
+        </div>
+
+        <br>
+
+
+        <a href="zayavki.html">Сервис "Заявки на уценку"</a>
+    </div>
 </body>
 
 
