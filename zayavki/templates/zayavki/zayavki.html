@@ -1,87 +1,18 @@
+{% extends 'zayavki/base.html' %}
 {% load  static %}
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <link href="{% static '/styles.css' %}" rel="stylesheet">
-    <title>Заявки на уценку</title>
-</head>
-
-
-<body>
-    <div class="container">
-        <h1>Заявки на уценку</h1>
-        <div class="autorisation">
-            <div class="autorisation-login">
-                <!-- <form action="/">
-                    <label for="name">Логин:</label>
-                    <input type="text" id="name" placeholder="e-mail">
-                    <label for="password">Пароль:</label>
-                    <input class="pass" type="password" id="password">
-                    <input type="submit" value="Войти">
-                </form> -->
-                <form action="/">
-                    Пользователь: Нижний Новгород 7 Небо
-                    <input type="submit" value="Выйти">
-                </form>
-            </div>
-            <div class="autorisation-about">
-                Роль: магазин
-                <br>
-                Статус: активный
-            </div>
-        </div>
-
-        <hr />
-
-        <div class="email">
-            <form class="form-email" action="/">
-                <label for="email">E-mail: </label>
-                <input type="email" id="email" value="nnovgorod@gamepark.ru">
-                <input class="btn" type="submit" value="Сохранить">
-            </form>
-        </div>
-
+{% block content %}
+    <div>
         <br>
         <a class="link-new-application" href=""> Создать новую заявку</a>
-        <!-- <input class="btn-new-application" type="submit" value="Создать новую заявку"> -->
-
-
         <br><br>
-
         <div class="select_filter">
-            <div>
-                <a href="">На рассмотрении</a>
-            </div>
-            <div>
-                <a href="">Одобренные</a>
-            </div>
-            <div>
-                <a href="">Отклоненные</a>
-            </div>
-            <div>
-                <a href="">Переведены в уценку</a>
-            </div>
-            <div>
-                <a href="">Выполеннные</a>
-            </div>
+            {% for filter in filters %}
+                <div>
+                    <a href="">{{filter}}</a>
+                </div>
+            {% endfor %}            
         </div>
-
-        <!-- <form action="/">
-            <p><label for="filter_applications[]">Фильтр заявок: </label>
-                <select size="1" name="filter_applications[]">
-                    <option selected value="all">Все</option>
-                    <option value="under consideration">На рассмотрении</option>
-                    <option value="approved">Одобренные</option>
-                    <option value="archival">Архивные</option>
-                    
-                </select></p>
-            <p><input type="submit" value="Показать"></p>
-     
-        </form> -->
-
         <table>
             <tr>
                 <th>Дата</th>
@@ -131,13 +62,9 @@
                 <td>Журнал Мир фантастики 154</td>
                 <td><a href="">Открыть...</a></td>
             </tr>
-
         </table>
-
-
-
+        <br>
     </div>
-</body>
+{% endblock content %}
 
 
-</html>

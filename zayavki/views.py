@@ -3,7 +3,19 @@ from django.shortcuts import render
 # Create your views here.
 
 def index(request):
-    return render(request, "zayavki/index.html")
+    context = {
+        "title" : "Главная страница",
+        "title_page" : "Главная страница"
+    }
+    return render(request, "zayavki/index.html", context)
 
 def zayavki(request):
-    return render(request, "zayavki/zayavki.html")    
+    context = {
+        "username" : "Нижний Новгород Мега",
+        "role" : "магазин",
+        "status" : "активный",
+        "filters" : ["Все", "На рассмотрении", "На уценке", "Замена ценников", "Отклоненные", "Завершенные"],
+        "title" : "Заявки на уценку",
+        "title_page" : "Заявки на уценку"
+    }
+    return render(request, "zayavki/zayavki.html", context)    
