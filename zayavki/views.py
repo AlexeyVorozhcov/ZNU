@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from zayavki.models import Zayavka
 
 # Create your views here.
 
@@ -16,6 +17,10 @@ def zayavki(request):
         "status" : "активный",
         "filters" : ["Все", "На рассмотрении", "На уценке", "Замена ценников", "Отклоненные", "Завершенные"],
         "title" : "Заявки на уценку",
-        "title_page" : "Заявки на уценку"
+        "title_page" : "Заявки на уценку",
+        "zayavki" : Zayavka.objects.all()
     }
     return render(request, "zayavki/zayavki.html", context)    
+
+
+     

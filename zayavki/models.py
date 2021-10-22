@@ -5,6 +5,12 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=30)
 
+    class Meta:
+        verbose_name_plural = "Categoryes"
+
+    def __str__(self) -> str:
+        return self.name
+
 class Zayavka(models.Model):
     shop = models.CharField(max_length=50) # поменять на ссылку на пользователя
     data = models.DateField(auto_now_add=True)
@@ -23,4 +29,9 @@ class Zayavka(models.Model):
     status6 = models.BooleanField()
     clarification_of_manager = models.CharField(max_length=150, blank=True)
 
+    class Meta:
+        verbose_name_plural = "Zayavki"
+
+    def __str__(self) -> str:
+        return self.name
 

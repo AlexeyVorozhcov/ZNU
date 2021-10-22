@@ -20,7 +20,15 @@
                 <th>Номенклатура</th>
                 <th>Ссылка</th>
             </tr>
-            <tr>
+            {%for zayavka in zayavki%}
+                <tr>
+                    <td>Дата</td>
+                    <td>Номер заявки</td>
+                    <td>{{zayavka}}</td>
+                    <td>Ссылка</td>
+                </tr>
+            {%endfor%}
+            {% comment %} <tr>
                 <td>01.09.2021</td>
                 <td>Заявка №002</td>
                 <td>Комикс Супермен против бетмена</td>
@@ -61,7 +69,7 @@
                 <td>Заявка №005</td>
                 <td>Журнал Мир фантастики 154</td>
                 <td><a href="">Открыть...</a></td>
-            </tr>
+            </tr> {% endcomment %}
         </table>
         <br>
     </div>
