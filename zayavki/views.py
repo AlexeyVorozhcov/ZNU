@@ -18,8 +18,9 @@ def zayavki(request):
         "filters" : ["Все", "На рассмотрении", "На уценке", "Замена ценников", "Отклоненные", "Завершенные"],
         "title" : "Заявки на уценку",
         "title_page" : "Заявки на уценку",
-        "zayavki" : Zayavka.objects.all()
+        "z" : Zayavka.objects.all()
     }
+    print (context.get("z"))
     return render(request, "zayavki/zayavki.html", context)    
 
 
