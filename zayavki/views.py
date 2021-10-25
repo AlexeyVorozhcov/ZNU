@@ -10,7 +10,7 @@ def index(request):
     }
     return render(request, "zayavki/index.html", context)
 
-def zayavki(request):
+def main_page(request):
     context = {
         "username" : "Нижний Новгород Мега",
         "role" : "магазин",
@@ -21,7 +21,7 @@ def zayavki(request):
         "z" : Zayavka.objects.all()
     }
     print (context.get("z"))
-    return render(request, "zayavki/zayavki.html", context)    
+    return render(request, "zayavki/main_page.html", context)    
 
 
      

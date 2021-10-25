@@ -14,17 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import static
-from ZNU.settings import MEDIA_URL, MEDIA_ROOT, DEBUG
+from django.conf import settings
+# from ZNU.settings import MEDIA_URL, MEDIA_ROOT, DEBUG
 
-from zayavki.views import index, zayavki
+
+from zayavki.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name="index"),
-    path('zayavki/', zayavki, name="zayavki"),
+    path('zayavki/', include('zayavki.urls', namespace="zayavki")),
 ]
 
-# if DEBUG:
-#     urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
