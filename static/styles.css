@@ -97,6 +97,10 @@ table {
   th, td {
     border: 1px solid grey;
     text-align: center;
+    padding-left: 3px;
+    padding-right: 3px;
+    /* margin-left: 10px;
+    margin-right: 10px; */
  }
 
  .select_filter {

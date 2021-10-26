@@ -1,0 +1,59 @@
+{% extends 'zayavki/base.html' %}
+{% load  static %}
+
+{% block content %}
+    <div>
+        <br>
+        <a class="link-new-application" href=""> Создать новую заявку</a>
+        <br><br>
+        <div class="select_filter">
+            {% for filter in filters %}
+                <div>
+                    <a href="">{{filter}}</a>
+                </div>
+            {% endfor %}            
+        </div>
+        <table>
+            <tr>
+                <th>Дата</th>
+                <th>Номер заявки</th>
+                <th>Номенклатура</th>
+                <th>Решение</th>
+                <th>Качество изменено</th>
+                <th>Ценник сменен</th>
+            </tr>
+            {%for zayavka in data_from_model_Zayavka%}
+                <tr>
+                    <td>{{zayavka.data}}</td>
+                    <td>{{zayavka.id}}</td>
+                    <td>
+                        <a href="{% url 'zayavki:one_zayavka' %}"> {{zayavka}} </a>
+                    </td>
+                    <td>{% if zayavka.status1 %}
+                            Одобрено
+                        {% elif zayavka.status2 %}
+                            Отклонено
+                        {% else %}
+                            Ожидание
+                        {% endif %}    
+                    </td>
+                    <td><input
+                            type="checkbox"
+                            id="status3"
+                            disabled
+                            {% if zayavka.status3 %}checked{% endif %}>
+                    </td>
+                    <td><input
+                            type="checkbox"
+                            id="status4"
+                            {% if zayavka.status4 %}checked{% endif %}>
+                    </td>
+                </tr>
+            {%endfor%}
+
+        </table>
+        <br>
+    </div>
+{% endblock content %}
+
+

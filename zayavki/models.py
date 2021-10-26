@@ -6,7 +6,9 @@ class Category(models.Model):
     name = models.CharField(max_length=30)
 
     class Meta:
-        verbose_name_plural = "Categoryes"
+        verbose_name_plural = "Категории"
+        verbose_name = "Категория"
+
 
     def __str__(self) -> str:
         return self.name
@@ -21,16 +23,17 @@ class Zayavka(models.Model):
     clarification = models.TextField()
     foto1 = models.ImageField(upload_to="zayavki/foto", blank=True )
     foto2 = models.ImageField(upload_to="zayavki/foto", blank=True)
-    status1 = models.BooleanField() # менеджер рассмотрел
-    status2 = models.BooleanField() # перевод в уценку произведен
-    status3 = models.BooleanField() # ценник в магазине изменен
-    status4 = models.BooleanField() # доп. - отклонено
+    status1 = models.BooleanField() # одобрено
+    status2 = models.BooleanField() # отклонено
+    status3 = models.BooleanField() # уценено
+    status4 = models.BooleanField() # ценник сменен
     status5 = models.BooleanField() # остальные поля - резервные
     status6 = models.BooleanField()
     clarification_of_manager = models.CharField(max_length=150, blank=True)
 
     class Meta:
-        verbose_name_plural = "Zayavki"
+        verbose_name_plural = "Заявки"
+        verbose_name = "Заявка"
 
     def __str__(self) -> str:
         return self.name
