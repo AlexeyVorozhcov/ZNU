@@ -20,11 +20,10 @@ from django.conf import settings
 # from ZNU.settings import MEDIA_URL, MEDIA_ROOT, DEBUG
 
 
-from zayavki.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name="index"),
+    path('', include('main_page.urls', namespace="main_page")),
     path('zayavki/', include('zayavki.urls', namespace="zayavki")),
 ]
 
