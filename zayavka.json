@@ -1,0 +1,68 @@
+[
+    {
+        "model": "zayavki.zayavka",
+        "pk": 1,
+        "fields": {
+            "shop": "����� ����",
+            "data": "2021-10-22",
+            "category": 3,
+            "code": "111222",
+            "name": "������ ������� ����",
+            "description": "������� ��������",
+            "clarification": "������ ����������",
+            "foto1": "zayavki/foto/�����_��������.png",
+            "foto2": "",
+            "status1": false,
+            "status2": true,
+            "status3": false,
+            "status4": false,
+            "status5": false,
+            "status6": false,
+            "clarification_of_manager": ""
+        }
+    },
+    {
+        "model": "zayavki.zayavka",
+        "pk": 2,
+        "fields": {
+            "shop": "111",
+            "data": "2021-10-22",
+            "category": 1,
+            "code": "111111",
+            "name": "����� ������",
+            "description": "1111",
+            "clarification": "11111",
+            "foto1": "",
+            "foto2": "",
+            "status1": true,
+            "status2": false,
+            "status3": true,
+            "status4": true,
+            "status5": false,
+            "status6": false,
+            "clarification_of_manager": ""
+        }
+    },
+    {
+        "model": "zayavki.zayavka",
+        "pk": 3,
+        "fields": {
+            "shop": "����� ����",
+            "data": "2021-10-25",
+            "category": 3,
+            "code": "19684",
+            "name": "��������",
+            "description": "���",
+            "clarification": "���",
+            "foto1": "",
+            "foto2": "",
+            "status1": false,
+            "status2": false,
+            "status3": false,
+            "status4": false,
+            "status5": false,
+            "status6": false,
+            "clarification_of_manager": ""
+        }
+    }
+]

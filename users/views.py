@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 
 def index(request):
-    template = "users/index.html"
+    template = "users/login.html"
     context = {
         "title": "Авторизация",
         "title_page": "Авторизация"

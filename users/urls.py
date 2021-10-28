@@ -3,5 +3,5 @@ from .views import index
 
 app_name = "users"
 urlpatterns = [
-    path("", index, name="index")
+    path("login", index, name="login")
 ]

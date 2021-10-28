@@ -1,0 +1,23 @@
+[
+    {
+        "model": "zayavki.category",
+        "pk": 1,
+        "fields": {
+            "name": "���������� � ��"
+        }
+    },
+    {
+        "model": "zayavki.category",
+        "pk": 2,
+        "fields": {
+            "name": "��������, ��������"
+        }
+    },
+    {
+        "model": "zayavki.category",
+        "pk": 3,
+        "fields": {
+            "name": "�����"
+        }
+    }
+]

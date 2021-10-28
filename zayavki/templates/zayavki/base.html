@@ -15,11 +15,8 @@
         <h1>{{title_page|title}}</h1>
         <div class="autorisation">
             <div class="autorisation-login">
-                <form action="/">
-                    <label for="name">Логин:</label>
-                    <input type="text" id="name" placeholder="e-mail">
-                    <label for="password">Пароль:</label>
-                    <input class="pass" type="password" id="password">
+                {% comment %} Кнопка Войти {% endcomment %}
+                <form action={% url 'users:login' %}>
                     <input type="submit" value="Войти">
                 </form>
                 <form action="/">
