@@ -20,7 +20,6 @@ from django.conf import settings
 # from ZNU.settings import MEDIA_URL, MEDIA_ROOT, DEBUG
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main_page.urls', namespace="main_page")),
@@ -28,4 +27,5 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

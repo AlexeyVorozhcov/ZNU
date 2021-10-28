@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'zayavki',
     'main_page',
+    'users',
 ]
 
 MIDDLEWARE = [
