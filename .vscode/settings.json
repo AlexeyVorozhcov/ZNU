@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "c:\\Users\\alexe\\PycharmProjects2\\Заявки на уценку\\.venv\\Scripts\\python.exe"
+    "python.pythonPath": "c:\\Users\\alexe\\PycharmProjects2\\Заявки на уценку\\.venv\\Scripts\\python.exe",
+    "editor.maxTokenizationLineLength": 10000000
 }
