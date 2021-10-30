@@ -6,7 +6,7 @@ from django.contrib import auth
 
 from users.forms import UserLoginForm
 from users.forms import UserRegistrationForm
-
+from users.forms import UserProfileForm
 # Create your views here.
 
 
@@ -23,8 +23,7 @@ def login(request):
     else:
         form = UserLoginForm()
     template = "users/login.html"
-    context = {
-        "form": form}
+    context = {"form": form}
     return render(request, template, context)
 
 
@@ -39,14 +38,24 @@ def register(request):
     else:
         form = UserRegistrationForm
     template = "users/register.html"
-    context = {
-        "title": "Регистрация",
-        "form": form}
+    context = {"form": form}
     return render(request, template, context)
 
 
 def profile(request):
+    if request.method=="POST":
+        form = UserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('users:profile'))
+    else:
+        form = UserProfileForm(instance=request.user)
     template = "users/profile.html"
     context = {
-        "title": "Профиль"}
+        "form": form}
+
     return render(request, template, context)
+
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect(reverse("main_page:index"))    
