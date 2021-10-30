@@ -25,8 +25,9 @@ def login(request):
     template = "users/login.html"
     context = {
         "title": "Авторизация",
-        "form": form }
+        "form": form}
     return render(request, template, context)
+
 
 def register(request):
     if request.method == "POST":
@@ -35,20 +36,18 @@ def register(request):
             form.save()
             return HttpResponseRedirect(reverse('users:login'))
         else:
-            print(form.errors)    
+            print(form.errors)
     else:
         form = UserRegistrationForm
     template = "users/register.html"
     context = {
         "title": "Регистрация",
-        "form" : form}
+        "form": form}
     return render(request, template, context)
+
 
 def profile(request):
     template = "users/profile.html"
     context = {
         "title": "Профиль"}
     return render(request, template, context)
-
-
-
