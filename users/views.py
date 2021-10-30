@@ -24,7 +24,6 @@ def login(request):
         form = UserLoginForm()
     template = "users/login.html"
     context = {
-        "title": "Авторизация",
         "form": form}
     return render(request, template, context)
 
