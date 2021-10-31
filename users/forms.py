@@ -43,7 +43,8 @@ class UserProfileForm(UserChangeForm):
     attrs_for_email = {"class" : name_class}
     username = forms.CharField(widget=forms.TextInput(attrs=attrs_for_username))
     email = forms.CharField(widget=forms.EmailInput(attrs=attrs_for_email))
+    shop = forms.CharField(widget=forms.TextInput(attrs=attrs_for_username))
     
     class Meta:
         model = User
-        fields = ( "username", "email")
+        fields = ( "username", "email", "shop")
