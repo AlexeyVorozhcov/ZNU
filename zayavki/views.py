@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from zayavki.models import Zayavka
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -11,6 +13,7 @@ def index(request):
     }
     return render(request, template, context)
 
+@login_required()
 def page_view(request):
     template = "zayavki/page_view.html"
     context = {
