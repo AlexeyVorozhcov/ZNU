@@ -52,6 +52,7 @@ def profile(request):
         return HttpResponseRedirect(reverse('users:profile'))
     else:
         form = UserProfileForm(instance=request.user)
+        print(request.user.shop)
     template = "users/profile.html"
     context = {"form": form}
     # import pdb; pdb.set_trace()
