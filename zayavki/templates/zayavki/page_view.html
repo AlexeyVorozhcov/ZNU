@@ -1,6 +1,10 @@
 {% extends 'main_page/base.html' %}
 {% load  static %}
 
+{% block css %}
+    <link href= {% static 'styles.css' %} rel="stylesheet">
+{% endblock css %}
+
 {% block content %}
     <div>
         <br>

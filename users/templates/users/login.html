@@ -1,9 +1,14 @@
-{% extends 'users/base.html' %}
+{% extends 'main_page/base.html' %}
 {% load static %}
+
+{% block css %}    
+    <link href= {% static '/css/auth.css' %} rel="stylesheet"/>
+    <link href= {% static 'styles.css' %} rel="stylesheet">
+{% endblock css %}
 
 
 {% block content %}
-<div class="col-lg-5">
+<div class="col-lg-5 container">
     {% if form.errors %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert"
                 style="margin-top: 50px;">

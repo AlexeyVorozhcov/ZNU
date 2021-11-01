@@ -11,10 +11,9 @@
 
     <!-- Bootstrap core CSS -->
     <link href= {% static '/vendor/bootstrap/css/bootstrap.min.css' %}  rel="stylesheet">
-
     <!-- Custom styles for this template -->
-    <link href= {% static '/css/profile.css' %} rel="stylesheet">
-    <link href= {% static 'styles.css' %} rel="stylesheet">
+    {% block css %}{% endblock css %}
+
 </head>
 <body class="bg-light">
 <!-- Navigation -->
@@ -55,9 +54,8 @@
 </div>
 
 <!-- Bootstrap core JavaScript -->
-<script src= {% static '/css/profile.css' %} ></script>
+{% comment %} <script src= {% static '/css/profile.css' %} ></script> {% endcomment %}
 <script src={% static '/vendor/bootstrap/js/bootstrap.bundle.min.js' %} ></script>
-
 <!-- FontAwesome script -->
 <script src={% static '/vendor/fontawesome/fontawesome-icons.js' %} crossorigin="anonymous"></script>
 </body>
