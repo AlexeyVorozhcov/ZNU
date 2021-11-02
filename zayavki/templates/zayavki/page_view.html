@@ -5,6 +5,13 @@
     <link href= {% static 'styles.css' %} rel="stylesheet">
 {% endblock css %}
 
+
+{% block name_app %}
+    <a class="navbar-brand" href="{% url 'zayavki:page_view' %}"> > Заявки на уценку</a>
+{% endblock name_app %}
+
+
+
 {% block content %}
     <div>
         <br>
@@ -31,7 +38,7 @@
                 <th class="col-4">Номенклатура</th>
                 <th class="col-1">Решение</th>
                 <th class="col-1">Уценка в 1С</th>
-                <th class="col-1">Уценка в магазине</th>
+                <th class="col-1">Уценка на витрине</th>
             </tr>
             {%for zayavka in data_from_model_Zayavka%}
                 <tr>

@@ -45,15 +45,17 @@ th, td {
     display:flex;
     flex-wrap: wrap;
     text-decoration: none;
+    gap:10px;
+    margin-bottom: 10px;
  } 
 
- .select_filter > div {
+ /* .select_filter > div {
     margin: 10px;
     /* margin-bottom: 20px; 
     margin-right: 25px;
     width: 20%;
     text-align: center; */
- }
+ 
 
  .image {
      background-color: none;
