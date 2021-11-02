@@ -19,19 +19,19 @@
         <div class="select_filter">
             {% for filter in filters %}
                 <div>
-                    <a href="">{{filter}}</a>
+                    <a class="btn btn-outline-primary btn-sm text-nowrap" href="#" role="button">{{ filter }}</a>
                 </div>
             {% endfor %}            
         </div>
         <table>
             <tr>
-                <th>Дата</th>
-                <th>Номер заявки</th>
-                <th>Магазин</th>
-                <th>Номенклатура</th>
-                <th>Решение</th>
-                <th>Уценка в 1С</th>
-                <th>Уценка в магазине</th>
+                <th class="col-1">Дата</th>
+                <th class="col-1">Номер заявки</th>
+                <th class="col-3">Магазин</th>
+                <th class="col-4">Номенклатура</th>
+                <th class="col-1">Решение</th>
+                <th class="col-1">Уценка в 1С</th>
+                <th class="col-1">Уценка в магазине</th>
             </tr>
             {%for zayavka in data_from_model_Zayavka%}
                 <tr>
@@ -42,22 +42,25 @@
                         <a href="{% url 'zayavki:one_zayavka' %}"> {{zayavka}} </a>
                     </td>
                     <td>{% if zayavka.status1 %}
-                            Одобрено
+                            <i class="fa fa-check" style="color:green" aria-hidden="true"></i>
                         {% elif zayavka.status2 %}
-                            Отклонено
+                            <i class="fa fa-times" style="color:red" aria-hidden="true"></i>
                         {% else %}
-                            Ожидание
+                            <i class="fa fa-hourglass-half" style="color:gray" aria-hidden="true"></i>
                         {% endif %}    
                     </td>
-                    <td><input
-                            type="checkbox"
-                            id="status3"
-                            disabled
-                            {% if zayavka.status3 %}checked{% endif %}>
+                    <td>{% if zayavka.status1 and zayavka.status3 %}
+                            <i class="fa fa-check"  style="color:green" aria-hidden="true"></i>
+                        {% elif  zayavka.status1 and not zayavka.status3%}
+                            <i class="fa fa-hourglass-half"  style="color:gray" aria-hidden="true"></i>
+                        {% endif %} 
+                            
                     </td>
-                    <td><span style="font-family: Wingdings; color: Green; font-size: 15pt;" >
-                             &#10004; 
-                        </span>
+                    <td>{% if zayavka.status3 and zayavka.status4 %}
+                            <i class="fa fa-check" style="color:green" aria-hidden="true"></i>
+                        {% elif zayavka.status3 and not zayavka.status4%}
+                            <i class="fa fa-hourglass-half" style="color:gray" aria-hidden="true"></i>
+                        {% endif %} 
                     </td>
                 </tr>
             {%endfor%}

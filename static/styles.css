@@ -29,6 +29,7 @@ table {
     
 }
 
+
 th, td {
     border: 1px solid grey;
     text-align: center;
@@ -41,8 +42,8 @@ th, td {
  }
 
  .select_filter {
-    display: flex;
-    box-sizing: border-box;
+    display:flex;
+    flex-wrap: wrap;
     text-decoration: none;
  } 
 
