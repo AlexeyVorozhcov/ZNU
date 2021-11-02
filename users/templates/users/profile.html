@@ -13,17 +13,18 @@
                 {% csrf_token %} 
                                 
                 <div class="form-row">
-                    <div class="col-lg-6">
-                        <label class="small mb-1" for={{form.username.id_for_input}}>Имя пользователя</label>
-                        {{ form.username}}
-                    </div>
-                    <div class="col-lg-6">
-                        <label class="small mb-1" for={{form.shop.id_for_input}}> Магазин </label>
-                        {{ form.shop}}
+                    <div class="col-lg-12">
+                        <p class="mb-1">Имя пользователя: {{user.username}}</p>                        
                     </div>
                     <div class="col-lg-12">
-                        <label class="small mb-1" for={{form.email.id_for_input}}>Адрес электронной
-                            почты</label>
+                        <p class="mb-1">Магазин: {{user.shop}} </p>                        
+                    </div>
+                    <div class="col-lg-12">
+                        <p class="mb-1">Роль: {{user.role}} </p>                        
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="mb-1" for={{form.email.id_for_input}}>Адрес электронной
+                            почты:</label>
                         {{form.email}}
                     </div>
                 </div>

@@ -1,18 +1,10 @@
 from django.db import models
-from users.models import User
+from users.models import User, Category
 
 # Create your models here.
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=30)
 
-    class Meta:
-        verbose_name_plural = "Категории"
-        verbose_name = "Категория"
-
-    def __str__(self) -> str:
-        return self.name
 
 
 class Zayavka(models.Model):

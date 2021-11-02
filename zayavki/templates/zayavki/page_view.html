@@ -27,15 +27,17 @@
             <tr>
                 <th>Дата</th>
                 <th>Номер заявки</th>
+                <th>Магазин</th>
                 <th>Номенклатура</th>
                 <th>Решение</th>
-                <th>Качество изменено</th>
-                <th>Ценник сменен</th>
+                <th>Уценка в 1С</th>
+                <th>Уценка в магазине</th>
             </tr>
             {%for zayavka in data_from_model_Zayavka%}
                 <tr>
-                    <td>{{zayavka.data}}</td>
+                    <td>{{zayavka.data|date:"d.m.Y"}}</td>
                     <td>{{zayavka.id}}</td>
+                    <td>{{zayavka.user.shop}}</td>
                     <td>
                         <a href="{% url 'zayavki:one_zayavka' %}"> {{zayavka}} </a>
                     </td>

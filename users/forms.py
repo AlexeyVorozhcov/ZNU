@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
+from django.forms import fields
 
 from users.models import User
 
@@ -35,16 +36,13 @@ class UserRegistrationForm (UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email", "password1", "password2")
+        fields = ("username", "email", "password1", "password2")
 
 class UserProfileForm(UserChangeForm):
     name_class = "form-control py-4"
-    attrs_for_username = {"class" : name_class,'readonly' : True}
     attrs_for_email = {"class" : name_class}
-    username = forms.CharField(widget=forms.TextInput(attrs=attrs_for_username))
     email = forms.CharField(widget=forms.EmailInput(attrs=attrs_for_email))
-    shop = forms.CharField(widget=forms.TextInput(attrs=attrs_for_username))
-    
+        
     class Meta:
         model = User
-        fields = ( "username", "email", "shop")
+        fields = ("email",)
