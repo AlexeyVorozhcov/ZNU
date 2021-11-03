@@ -10,7 +10,7 @@ from users.models import User, Category, Shops
 
 class Zayavka(models.Model):
     user = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
-    shop = models.ForeignKey(Shops, default=None, null=True, on_delete=models.PROTECT)
+    # shop = models.ForeignKey(Shops, default=None, null=True, on_delete=models.PROTECT)
     data = models.DateField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     code = models.CharField(max_length=10)
