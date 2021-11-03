@@ -24,10 +24,14 @@
 
 
         <div class="select_filter">
-            {% for filter in filters %}
+            {% for name_filter, param_filter in filters.items %}
                 <div>
-                    <a class="btn btn-outline-primary btn-sm text-nowrap" href="#" role="button">{{ filter }}</a>
-                </div>
+                    {% if cur_filter != param_filter  %} 
+                        <a class="btn btn-outline-primary btn-sm text-nowrap" href="{% url 'zayavki:page_view_filter' param_filter %}" role="button">{{ name_filter }}</a>
+                    {% else %}
+                        <a class="btn btn-primary btn-sm text-nowrap" href="{% url 'zayavki:page_view_filter' param_filter %}" role="button">{{ name_filter }}</a>
+                    {% endif %}
+                </div>    
             {% endfor %}            
         </div>
         <table>
