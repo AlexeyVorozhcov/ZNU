@@ -13,16 +13,13 @@
 
 
 {% block content %}
-    <div>
-        <br>
-        <a class="btn btn-success"  href="yandex.ru"> 
-        Создать новую заявку
-        </a>
-        
-        <br><br>
-        
-
-
+    <div >
+        {% comment %} Кнопка СОЗДАТЬ НОВУЮ ЗАЯВКУ {% endcomment %}
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: 10px;">
+            <a class="btn btn-success" href="{% url 'zayavki:add_zayavka' %}">Создать новую заявку</a>            
+        </div>
+      
+        {% comment %} БЛОК ФИЛЬТРОВ {% endcomment %}
         <div class="select_filter">
             {% for name_filter, param_filter in filters.items %}
                 <div>
@@ -34,6 +31,8 @@
                 </div>    
             {% endfor %}            
         </div>
+        
+        {% comment %} ТАБЛИЦА ЗАЯВОК {% endcomment %}
         <table>
             <tr>
                 <th class="col-1">Дата</th>
@@ -50,7 +49,7 @@
                     <td>{{zayavka.id}}</td>
                     <td>{{zayavka.user.shop}}</td>
                     <td>
-                        <a href="{% url 'zayavki:one_zayavka' %}"> {{zayavka}} </a>
+                        <a href="{% url 'zayavki:add_zayavka' %}"> {{zayavka}} </a>
                     </td>
                     <td>{% if zayavka.status1 %}
                             <i class="fa fa-check" style="color:green" aria-hidden="true"></i>

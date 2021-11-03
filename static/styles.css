@@ -2,21 +2,12 @@
 
 body {
     padding-top: 56px;
-    
 }
-/* body {
-    background-color: #f1f1f1;
-    font: normal 14px 'Roboto', sans-serif;
-    padding-top: 56px;
-    
-} */
-
 
 .container {
     max-width: 760px;
     margin: auto;
 }
-
 
 table {
     width: 100%;
@@ -29,19 +20,15 @@ table {
     
 }
 
-
 th, td {
     border: 1px solid grey;
     text-align: center;
     padding-left: 3px;
     padding-right: 3px;
     font-size: 14px;
-    /* margin-left: 10px;
-    margin-right: 10px; */
-    
  }
 
- .select_filter {
+.select_filter {
     display:flex;
     flex-wrap: wrap;
     text-decoration: none;
@@ -49,15 +36,7 @@ th, td {
     margin-bottom: 10px;
  } 
 
- /* .select_filter > div {
-    margin: 10px;
-    /* margin-bottom: 20px; 
-    margin-right: 25px;
-    width: 20%;
-    text-align: center; */
- 
-
- .image {
+.image {
      background-color: none;
  }
 

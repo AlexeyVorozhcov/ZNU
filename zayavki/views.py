@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from zayavki.models import Zayavka
+from zayavki.forms import AddZayavkaForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.shortcuts import HttpResponseRedirect
+from django.urls import reverse
+
 
 # Create your views here.
 
@@ -38,9 +42,11 @@ def get_data_from_model_Zayavka(filter, user):
     '''
     result = None # возвращаемый результат
     bd_for_user = None # первичная выборка базы для юзера (записи только для конкретного магазина или менеджера)
+    # если Магазин, то отбираются все заявки с этим магазином
     if user.role.namerole == "Магазин": bd_for_user = Zayavka.objects.filter(user__shop=user.shop)
     else:
-        bd_for_user = Zayavka.objects.all()
+        print(user.role.work_category.all())
+        bd_for_user = Zayavka.objects.filter(category__in=user.role.work_category.all())
     arch = bd_for_user.filter(status5=True) # архивные
     all = bd_for_user.filter(status5=False) # все кроме архивных
     resh = all.filter(status1=False, status2=False) # ожидающие решения
@@ -67,16 +73,20 @@ def get_data_from_model_Zayavka(filter, user):
 
     return result
 
-def one_zayavka(request):
-    id = 1
-    template = "zayavki/one_zayavka.html"
-    context = {
-        "username" : "Нижний Новгород Мега",
-        "role" : "магазин",
-        "status" : "активный",
-        "data_from_model_Zayavka" : Zayavka.objects.filter(id=id)
-    }
-    return render(request, template, context)    
+@login_required
+def add_zayavka(request):
+    if request.method=="POST":
+        form = AddZayavkaForm(data=request.POST, files=request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse('users:profile'))
+    else:
+        form = AddZayavkaForm()
+        print(request.user.shop)
+    template = "zayavka/add_zayavka.html"
+    context = {"form": form}
+    # import pdb; pdb.set_trace()
+    return render(request, template, context)  
 
 
      

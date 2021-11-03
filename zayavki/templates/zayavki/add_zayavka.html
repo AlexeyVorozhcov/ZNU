@@ -1,0 +1,37 @@
+{% extends 'main_page/base.html' %}
+{% load  static %}
+
+{% block content %}
+<div class="row">
+        <div class="col-lg-12">
+            <h4 class="mt-3 mb-3">Новая заявка</h4>
+            <form action="{% url 'users:profile' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %} 
+                                
+                <div class="form-row">
+                    {{ form }}
+                    {% comment %} <div class="col-lg-12">
+                        <p class="mb-1">Имя пользователя: {{user.username}}</p>                        
+                    </div>
+                    <div class="col-lg-12">
+                        <p class="mb-1">Магазин: {{user.shop}} </p>                        
+                    </div>
+                    <div class="col-lg-12">
+                        <p class="mb-1">Роль: {{user.role}} </p>                        
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="mb-1" for={{form.email.id_for_input}}>Адрес электронной
+                            почты:</label>
+                        {{form.email}}
+                    </div> {% endcomment %}
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-12" style="margin-top: 33px;">
+                        <input class="btn btn-info btn-block" type="submit" value="Сохранить">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+</div>
+{% endblock content %}
