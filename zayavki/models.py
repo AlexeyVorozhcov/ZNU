@@ -1,5 +1,6 @@
 from django.db import models
-from users.models import User, Category
+from users.models import User, Category, Shops
+
 
 # Create your models here.
 
@@ -9,6 +10,7 @@ from users.models import User, Category
 
 class Zayavka(models.Model):
     user = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
+    shop = models.ForeignKey(Shops, default=None, null=True, on_delete=models.PROTECT)
     data = models.DateField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     code = models.CharField(max_length=10)

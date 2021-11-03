@@ -1,4 +1,5 @@
 {
     "python.pythonPath": "c:\\Users\\alexe\\PycharmProjects2\\Заявки на уценку\\.venv\\Scripts\\python.exe",
-    "editor.maxTokenizationLineLength": 10000000
+    "editor.maxTokenizationLineLength": 10000000,
+    "liveServer.settings.port" : 8000
 }
