@@ -45,7 +45,7 @@ def get_data_from_model_Zayavka(filter, user):
     # если Магазин, то отбираются все заявки с этим магазином
     if user.role.namerole == "Магазин": bd_for_user = Zayavka.objects.filter(user__shop=user.shop)
     else:
-        print(user.role.work_category.all())
+        # print(user.role.work_category.all())
         bd_for_user = Zayavka.objects.filter(category__in=user.role.work_category.all())
     arch = bd_for_user.filter(status5=True) # архивные
     all = bd_for_user.filter(status5=False) # все кроме архивных
@@ -67,18 +67,20 @@ def get_data_from_model_Zayavka(filter, user):
 
 @login_required
 def add_zayavka(request):
-    print ("Я зашел сюда")
     if request.method=="POST":
         form = AddZayavkaForm(data=request.POST, files=request.FILES)
         if form.is_valid():
-            form.save()
+            new_zayavka = form.save()
+            new_zayavka.user = request.user
+            new_zayavka.save()
+        else:
+            pass #TODO вывести сообщение    
         return HttpResponseRedirect(reverse('zayavki:page_view'))
     else:
-        form = AddZayavkaForm()
+        form = AddZayavkaForm(instance=request.user)
+    
     template = "zayavki/add_zayavka.html"
     context = {"form": form}
-    # import pdb; pdb.set_trace()
     return render(request, template, context)  
 
-
-     
+    

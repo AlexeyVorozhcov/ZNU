@@ -19,12 +19,13 @@ class Zayavka(models.Model):
     clarification = models.TextField()
     foto1 = models.ImageField(upload_to="zayavki/foto", blank=True)
     foto2 = models.ImageField(upload_to="zayavki/foto", blank=True)
-    status1 = models.BooleanField()  # одобрено
-    status2 = models.BooleanField()  # отклонено
-    status3 = models.BooleanField()  # уценено
-    status4 = models.BooleanField()  # ценник сменен
-    status5 = models.BooleanField()  # остальные поля - резервные
-    status6 = models.BooleanField()
+    status1 = models.BooleanField(default=False, null=True)  # одобрено
+    status2 = models.BooleanField(default=False, null=True)  # отклонено
+    status3 = models.BooleanField(default=False, null=True)  # уценено
+    status4 = models.BooleanField(default=False, null=True)  # ценник сменен
+    status5 = models.BooleanField(default=False, null=True)  # остальные поля - резервные
+    status6 = models.BooleanField(default=False, null=True)
+    # TODO Убрать null
     clarification_of_manager = models.CharField(max_length=150, blank=True)
 
     class Meta:
