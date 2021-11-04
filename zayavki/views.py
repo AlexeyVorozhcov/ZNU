@@ -63,27 +63,19 @@ def get_data_from_model_Zayavka(filter, user):
     if filter == "utc": result = utc
     if filter == "utc_inshop": result = utc_inshop
 
-    # if not filter or filter == "all": result = Zayavka.objects.all() # все
-    # if filter=="resh": result = result.filter(status1=False, status2=False) # ожидающие решения
-    # if filter == "arch": result = Zayavka.objects.filter(status5__in=[True])  # архивные
-    # elif filter == "resh": result = Zayavka.objects.filter(status1__in=[False], status2__in=[False], status5__in=[False])  # ожидающие решения
-    # elif filter == "otkl": result = Zayavka.objects.filter(status1__in=[False], status2__in=[True], status5__in=[False])  # отклоненные
-    # elif filter == "utc": result = Zayavka.objects.filter(status1__in=[True],status3__in=[False], status5__in=[False])  # ожидающие уценки в 1с
-    # elif filter == "utc_inshop": result = Zayavka.objects.filter(status3__in=[True], status5__in=[False])  # ожидающие уценки в магазине
-
     return result
 
 @login_required
 def add_zayavka(request):
+    print ("Я зашел сюда")
     if request.method=="POST":
-        form = AddZayavkaForm(data=request.POST, files=request.FILES, instance=request.user)
+        form = AddZayavkaForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save()
-        return HttpResponseRedirect(reverse('users:profile'))
+        return HttpResponseRedirect(reverse('zayavki:page_view'))
     else:
         form = AddZayavkaForm()
-        print(request.user.shop)
-    template = "zayavka/add_zayavka.html"
+    template = "zayavki/add_zayavka.html"
     context = {"form": form}
     # import pdb; pdb.set_trace()
     return render(request, template, context)  

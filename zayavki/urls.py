@@ -6,5 +6,5 @@ app_name = "zayavki"
 urlpatterns = [
     path("", page_view, name="page_view"),
     path('<str:filter>/', page_view, name='page_view_filter'),
-    path("add_zayavka/", add_zayavka, name="add_zayavka"),
+    path("add_zayavka", add_zayavka, name="add_zayavka"),
 ]
