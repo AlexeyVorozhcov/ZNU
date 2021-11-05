@@ -18,13 +18,15 @@ def index(request):
     return render(request, template, context)
 
 @login_required()
-def page_view(request, filter=None):
+def page_view(request):
     template = "zayavki/page_view.html" #шаблон страницы
-    page = request.POST.get('page', None)
+    page = request.GET.get('page', None)
+    filter_ = request.GET.get('filter', None)
     print(page)
-    start_filter=filter
-    if not page: 
-        start_filter = get_start_filter(filter=filter, user=request.user)
+    start_filter=filter_
+    if not start_filter: 
+        start_filter = get_start_filter(filter=start_filter, user=request.user)
+    if not page:
         page=1
     context = {
         "filters" : {

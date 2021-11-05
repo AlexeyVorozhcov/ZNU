@@ -24,9 +24,9 @@
             {% for name_filter, param_filter in filters.items %}
                 <div>
                     {% if cur_filter != param_filter  %} 
-                        <a class="btn btn-outline-primary btn-sm text-nowrap" href="{% url 'zayavki:page_view_filter' param_filter %}" role="button">{{ name_filter }}</a>
+                        <a class="btn btn-outline-primary btn-sm text-nowrap" href="{% url 'zayavki:page_view'%}?filter={{param_filter}} " role="button">{{ name_filter }}</a>
                     {% else %}
-                        <a class="btn btn-primary btn-sm text-nowrap" href="{% url 'zayavki:page_view_filter' param_filter %}" role="button">{{ name_filter }}</a>
+                        <a class="btn btn-primary btn-sm text-nowrap" href="{% url 'zayavki:page_view'%}?filter={{param_filter}} " role="button">{{ name_filter }}</a>
                     {% endif %}
                 </div>    
             {% endfor %}            
@@ -88,21 +88,21 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item {% if not data_from_model_Zayavka.has_previous %} disabled {% endif %}">
                     <a class="page-link" 
-                        href="{% if data_from_model_Zayavka.has_previous %} {% url 'zayavki:page' data_from_model_Zayavka.previous_page_number  %} {% else %}#{% endif %}" 
+                        href="{% if data_from_model_Zayavka.has_previous %} {% url 'zayavki:page_view' %}?page={{data_from_model_Zayavka.previous_page_number}}&filter={{cur_filter}} {% else %}#{% endif %}" 
                         tabindex="-1">Предыдущая</a>
                     </li>
-                    {% for page in data_from_model_Zayavka.paginator.page_range %}
-                        <li class="page-item {% if data_from_model_Zayavka.number == page %}active{% endif %}">
+                    {% for page_ in data_from_model_Zayavka.paginator.page_range %}
+                        <li class="page-item {% if data_from_model_Zayavka.number == page_ %}active{% endif %}">
                             <a class="page-link " 
-                                href="{% url 'zayavki:page_view_filter' cur_filter %}?page={{page}}">
-                                {{page}}
+                                href="{% url 'zayavki:page_view' %}?page={{page_}}&filter={{cur_filter}}">
+                                {{page_}}
                             </a>
                         </li>
                     {% endfor %}
 
                     <li class="page-item {% if not data_from_model_Zayavka.has_next %} disabled {% endif %}">
                     <a class="page-link" 
-                        href="{% if data_from_model_Zayavka.has_next %} {% url 'zayavki:page' data_from_model_Zayavka.next_page_number  %} {% else %}#{% endif %}">
+                        href="{% if data_from_model_Zayavka.has_next %} {% url 'zayavki:page_view' %}?page={{data_from_model_Zayavka.next_page_number}}&filter={{cur_filter}} {% else %}#{% endif %}">
                         Следующая
                     </a>
                     </li>
