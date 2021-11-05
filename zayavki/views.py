@@ -19,7 +19,13 @@ def index(request):
 
 @login_required()
 def page_view(request, filter=None):
-    template = "zayavki/page_view.html"
+    template = "zayavki/page_view.html" #шаблон страницы
+    page = request.POST.get('page', None)
+    print(page)
+    start_filter=filter
+    if not page: 
+        start_filter = get_start_filter(filter=filter, user=request.user)
+        page=1
     context = {
         "filters" : {
             "Все активные" : "all", 
@@ -28,17 +34,33 @@ def page_view(request, filter=None):
             "Ждут уценки на витрине" : "utc_inshop", 
             "Отклоненные" : "otkl", 
             "Архивные" : "arch"},
-        "cur_filter" : filter,    
+        "cur_filter" : start_filter,    
         "title" : "Заявки на уценку",
         "title_page" : "Заявки на уценку",
-        "data_from_model_Zayavka" : get_data_from_model_Zayavka(filter=filter, user=request.user)
+        "data_from_model_Zayavka" : get_data_from_model_Zayavka(filter=start_filter, user=request.user, page=page)
     }
     return render(request, template, context)   
 
-
-def get_data_from_model_Zayavka(filter, user):
+def get_start_filter(filter, user):
     '''
-    Возвращает выборку из таблицы по условиям фильтра
+    Возвращает стартовый фильтр. Если вход без фильтра, то устанавливается стартовый фильтр в зависимости от
+    роли пользователя. Если это магазин - стартовый фильтр будет 'Ждет уценки на витрине', 
+    если менеджер = 'Ждут рассмотрения'.
+    Возвращает исходный фильтр, если он не пустой
+    '''
+    result = filter
+    if not result:
+        print(user.role.namerole[:3])
+        if user.role.namerole == "Магазин": result="utc_inshop"
+        if user.role.namerole[:3]=="Мен": result="resh"
+    print ("Новый фильтр: ", filter)
+    return result
+
+def get_data_from_model_Zayavka(filter, user, page):
+    '''
+    Возвращает выборку из таблицы по условиям фильтра. Если пользователь Магазин - выборка записей, этого магазина. 
+    Если пользователь Менеджер - выборка тех записей, категория которых есть в списке рабочих категорий менеджера.
+    Далее выбора по статусам в зависимости от фильтра.
     '''
     result = None # возвращаемый результат
     bd_for_user = None # первичная выборка базы для юзера (записи только для конкретного магазина или менеджера)
@@ -62,8 +84,10 @@ def get_data_from_model_Zayavka(filter, user):
     if filter == "otkl": result = not_resh
     if filter == "utc": result = utc
     if filter == "utc_inshop": result = utc_inshop
-
-    return result
+    paginator = Paginator(result, 10)
+    result_paginator = paginator.page(page)
+    # print(result_paginator.paginator.num_pages )
+    return result_paginator
 
 @login_required
 def add_zayavka(request):
