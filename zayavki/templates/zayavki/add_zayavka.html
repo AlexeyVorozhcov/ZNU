@@ -2,14 +2,14 @@
 {% load  static %}
 
 {% block name_app %}
-    <a class="navbar-brand" href="{% url 'zayavki:page_view' %}"> > Заявки на уценку</a>
+    <a class="navbar-brand" href="{% url 'zayavki:page_view' %}"> > Заявки на уценку > Просмотр </a>
 {% endblock name_app %}
 
 
 {% block content %}
 <div class="row">
         <div class="col-lg-12">
-            <h4 class="mt-3 mb-3">Новая заявка</h4>
+            {% comment %} <h4 class="mt-3 mb-3">Новая заявка</h4> {% endcomment %}
             <form action="{% url 'zayavki:add_zayavka' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %} 
                                 

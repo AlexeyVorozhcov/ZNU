@@ -12,13 +12,17 @@ body {
     margin-bottom: 10px;
  } 
 
- th, td {
-    text-align: center;
+.my_table {
     padding-left: 3px;
     padding-right: 3px;
     font-size: 14px;
     line-height: 1;
+} 
+
+th, td {
+    align-items: center;
  }
+
 
 /* .container {
     max-width: 760px;

@@ -34,33 +34,44 @@
         
         {% comment %} ТАБЛИЦА ЗАЯВОК {% endcomment %}
         <div class="table-responsive">
-        <table class="table table-hover table-bordered table-sm ">
+        <table class="table table-hover table-bordered table-sm my_table text-center">
             <thead>
                 <tr>                
+                    <th class="col-1">Дата</th>
                     <th class="col-1">Номер заявки</th>
                     <th class="col-1">Магазин</th>
-                    <th class="col-1">Дата</th>
                     <th class="col-1">Код товара</th>
-                    <th class="col-1">Номенклатура</th>
-                    <th class="col-2">Товарный вид</th>
-                    <th class="col-2">Пояснения</th>
-                    <th class="col-1">Решение</th>
-                    <th class="col-1">Уценка в 1С</th>
-                    <th class="col-1">Уценка на витрине</th>
+                    <th class="col-2 align-items-center" >Номенклатура</th>
+                    <th class="col-3">Товарный вид</th>
+                    <th class="col-3">Пояснения</th>
+                    <th class="col">Решение</th>
+                    <th class="col">Уценка в 1С</th>
+                    <th class="col">Уценка на витрине</th>
                 </tr>
             </thead>    
             
             <tbody>    
             {%for zayavka in data_from_model_Zayavka%}
-                <tr>
+                <tr>                   
                     <td>{{zayavka.data|date:"d.m.Y"}}</td>
                     <td>{{zayavka.id}}</td>
                     <td>{{zayavka.user.shop}}</td>
                     <td>{{zayavka.code}}</td>
                     <td>
-                        <a href="#"> {{zayavka}} </a>
+                        <a href="{% url 'zayavki:add_zayavka'%}?idz={{zayavka.id}}"> {{zayavka}} </a>
                     </td>
-                    <td>{{zayavka.description}}</td>
+                    <td>{{zayavka.description}}
+                        {% if zayavka.foto1 %}
+                            <a href="/media/{{zayavka.foto1}}"  target="_blank">
+                                <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
+                            </a>
+                        {% endif %}
+                        {% if zayavka.foto2 %}
+                            <a href="/media/{{zayavka.foto2}}"  target="_blank">
+                                <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
+                            </a>
+                        {% endif %}                    
+                    </td>
                     <td>{{zayavka.clarification}}</td>
                     <td>{% if zayavka.status1 %}
                             <i class="fa fa-check" style="color:green" aria-hidden="true"></i>

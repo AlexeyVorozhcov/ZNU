@@ -1,6 +1,7 @@
 from django.urls import path
 from zayavki.views import page_view, add_zayavka
 
+
 app_name = "zayavki"
 
 urlpatterns = [

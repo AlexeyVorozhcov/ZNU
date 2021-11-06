@@ -9,6 +9,9 @@ from django.urls import reverse
 
 # Create your views here.
 
+KOL_RECORDS_ON_PAGE = 30
+
+
 def index(request):
     template = "zayavki/index.html"
     context = {
@@ -86,15 +89,16 @@ def get_data_from_model_Zayavka(filter, user, page):
     if filter == "otkl": result = not_resh
     if filter == "utc": result = utc
     if filter == "utc_inshop": result = utc_inshop
-    paginator = Paginator(result, 10)
+    paginator = Paginator(result, KOL_RECORDS_ON_PAGE)
     result_paginator = paginator.page(page)
     # print(result_paginator.paginator.num_pages )
+    # print(result_paginator.object_list.get(id=1))
     return result_paginator
 
 @login_required
 def add_zayavka(request):
     if request.method=="POST":
-        form = AddZayavkaForm(data=request.POST, files=request.FILES)
+        form = AddZayavkaForm(data=request.POST)
         if form.is_valid():
             new_zayavka = form.save()
             new_zayavka.user = request.user
@@ -103,7 +107,9 @@ def add_zayavka(request):
             pass #TODO вывести сообщение    
         return HttpResponseRedirect(reverse('zayavki:page_view'))
     else:
-        form = AddZayavkaForm(instance=request.user)
+        idz = request.GET.get('idz', None)
+        if idz: form = AddZayavkaForm(instance=Zayavka.objects.get(id=idz))
+        else: form = AddZayavkaForm()
     
     template = "zayavki/add_zayavka.html"
     context = {"form": form}
