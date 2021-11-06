@@ -33,19 +33,24 @@
         </div>
         
         {% comment %} ТАБЛИЦА ЗАЯВОК {% endcomment %}
-        <table>
-            <tr>
-                <th class="col-1">Дата</th>
-                <th class="col-1">Номер заявки</th>
-                <th class="col-1">Магазин</th>
-                <th class="col-1">Код товара</th>
-                <th class="col-1">Номенклатура</th>
-                <th class="col-2">Товарный вид</th>
-                <th class="col-2">Пояснения</th>
-                <th class="col-1">Решение</th>
-                <th class="col-1">Уценка в 1С</th>
-                <th class="col-1">Уценка на витрине</th>
-            </tr>
+        <div class="table-responsive">
+        <table class="table table-hover table-bordered table-sm ">
+            <thead>
+                <tr>                
+                    <th class="col-1">Номер заявки</th>
+                    <th class="col-1">Магазин</th>
+                    <th class="col-1">Дата</th>
+                    <th class="col-1">Код товара</th>
+                    <th class="col-1">Номенклатура</th>
+                    <th class="col-2">Товарный вид</th>
+                    <th class="col-2">Пояснения</th>
+                    <th class="col-1">Решение</th>
+                    <th class="col-1">Уценка в 1С</th>
+                    <th class="col-1">Уценка на витрине</th>
+                </tr>
+            </thead>    
+            
+            <tbody>    
             {%for zayavka in data_from_model_Zayavka%}
                 <tr>
                     <td>{{zayavka.data|date:"d.m.Y"}}</td>
@@ -80,8 +85,9 @@
                     </td>
                 </tr>
             {%endfor%}
-
+        </tbody>    
         </table>
+        </div>
         <br>
         {% if data_from_model_Zayavka.paginator.num_pages > 1 %}
             <nav aria-label="Page navigation">

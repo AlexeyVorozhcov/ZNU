@@ -4,30 +4,6 @@ body {
     padding-top: 56px;
 }
 
-/* .container {
-    max-width: 760px;
-    margin: auto;
-} */
-
-table {
-    width: 100%;
-
-    border-style: solid;
-    border-collapse: collapse;
-    /*убираем пустые промежутки между ячейками*/
-    border: 1px solid grey;
-    /*устанавливаем для таблицы внешнюю границу серого цвета толщиной 1px*/
-    
-}
-
-th, td {
-    border: 1px solid grey;
-    text-align: center;
-    padding-left: 3px;
-    padding-right: 3px;
-    font-size: 14px;
- }
-
 .select_filter {
     display:flex;
     flex-wrap: wrap;
@@ -36,7 +12,41 @@ th, td {
     margin-bottom: 10px;
  } 
 
+ th, td {
+    text-align: center;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-size: 14px;
+    line-height: 1;
+ }
+
+/* .container {
+    max-width: 760px;
+    margin: auto;
+} */
+/* 
+table {
+    width: 100%;
+
+    border-style: solid;
+    border-collapse: collapse;
+    /*убираем пустые промежутки между ячейками
+    border: 1px solid grey;
+    /*устанавливаем для таблицы внешнюю границу серого цвета толщиной 1px
+    
+}
+/*  
+th, td {
+    border: 1px solid grey;
+    text-align: center;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-size: 14px;
+ }
+
+
+
 .image {
      background-color: none;
  }
-
+ */
