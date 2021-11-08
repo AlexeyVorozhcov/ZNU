@@ -17,11 +17,10 @@ body {
     padding-right: 3px;
     font-size: 14px;
     line-height: 1;
+    vertical-align: baseline;
 } 
 
-th, td {
-    align-items: center;
- }
+
 
 
 /* .container {

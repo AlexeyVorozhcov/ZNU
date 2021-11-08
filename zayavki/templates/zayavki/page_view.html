@@ -13,10 +13,12 @@
 
 
 {% block content %}
-    <div >
+    <div > 
         {% comment %} Кнопка СОЗДАТЬ НОВУЮ ЗАЯВКУ {% endcomment %}
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin-top: 10px;">
-            <a class="btn btn-success" href="{% url 'zayavki:add_zayavka' %}">Создать новую заявку</a>            
+        <div class="row justify-content-end">
+            <div class="col my-2 text-end">
+                <a class="btn btn-success text-nowrap" href="{% url 'zayavki:add_zayavka' %}">Создать новую заявку</a> 
+            </div>               
         </div>
       
         {% comment %} БЛОК ФИЛЬТРОВ {% endcomment %}
@@ -34,14 +36,14 @@
         
         {% comment %} ТАБЛИЦА ЗАЯВОК {% endcomment %}
         <div class="table-responsive">
-        <table class="table table-hover table-bordered table-sm my_table text-center">
+        <table class="table table-hover table-bordered table-sm my_table text-center align-items-center">
             <thead>
                 <tr>                
                     <th class="col-1">Дата</th>
                     <th class="col-1">Номер заявки</th>
                     <th class="col-1">Магазин</th>
                     <th class="col-1">Код товара</th>
-                    <th class="col-2 align-items-center" >Номенклатура</th>
+                    <th class="col-2" >Номенклатура</th>
                     <th class="col-3">Товарный вид</th>
                     <th class="col-3">Пояснения</th>
                     <th class="col">Решение</th>
