@@ -10,6 +10,7 @@ body {
     text-decoration: none;
     gap:10px;
     margin-bottom: 10px;
+    
  } 
 
 .my_table {
@@ -17,8 +18,10 @@ body {
     padding-right: 3px;
     font-size: 14px;
     line-height: 1;
-    vertical-align: baseline;
+    vertical-align: middle;
+    text-align: center;
 } 
+
 
 
 
