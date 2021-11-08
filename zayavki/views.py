@@ -7,8 +7,6 @@ from django.shortcuts import HttpResponseRedirect
 from django.urls import reverse
 
 
-# Create your views here.
-
 KOL_RECORDS_ON_PAGE = 30
 DICT_OF_FILTERS = {
             "Все активные": "all",
@@ -17,15 +15,6 @@ DICT_OF_FILTERS = {
             "Ждут уценки на витрине": "utc_inshop",
             "Отклоненные": "otkl",
             "Архивные": "arch"}
-
-
-def index(request):
-    template = "zayavki/index.html"
-    context = {
-        "title": "Главная страница",
-        "title_page": "Главная страница"
-    }
-    return render(request, template, context)
 
 
 @login_required()
@@ -110,6 +99,11 @@ def get_data_from_model_Zayavka(filter, user, page):
 
 @login_required
 def add_zayavka(request):
+    '''
+    Просмотр(GET) или создание(POST) заявки.
+    
+    '''
+    name_page = None
     if request.method == "POST":
         form = AddZayavkaForm(data=request.POST)
         if form.is_valid():
@@ -120,13 +114,18 @@ def add_zayavka(request):
             pass  # TODO вывести сообщение
         return HttpResponseRedirect(reverse('zayavki:page_view'))
     else:
-        idz = request.GET.get('idz', None)
-        if idz:
-            form = AddZayavkaForm(instance=Zayavka.objects.get(id=idz))
-        else:
-            form = AddZayavkaForm()
-
+        # GET. В параметрах идет idz - id заявки
+        id_zayavka = request.GET.get('idz', None)   # получаем idz
+        if id_zayavka: 
+            zayavka = Zayavka.objects.get(id=id_zayavka) # заявка по id
+            name_page="Просмотр заявки"
+        else: 
+            zayavka = None
+            name_page="Создание заявки"
+        form = AddZayavkaForm(instance=zayavka)
+        
     template = "zayavki/add_zayavka.html"
     context = {"form": form,
-               "title": "Просмотр заявки"}
+               "title": name_page,
+               "name_page" : name_page}
     return render(request, template, context)
