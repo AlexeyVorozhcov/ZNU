@@ -7,7 +7,7 @@ from django.shortcuts import HttpResponseRedirect
 from django.urls import reverse
 
 
-KOL_RECORDS_ON_PAGE = 30
+KOL_RECORDS_ON_PAGE = 10
 DICT_OF_FILTERS = {
             "Все активные": "all",
             "Ждут рассмотрения": "resh",

@@ -7,7 +7,7 @@
 
 
 {% block name_app %}
-    <a class="navbar-brand" href="{% url 'zayavki:page_view' %}"> > Заявки на уценку</a>
+    <a class="navbar-brand flex-grow-1" href="{% url 'zayavki:page_view' %}"> > Заявки на уценку</a>
 {% endblock name_app %}
 
 
@@ -36,9 +36,9 @@
         
         {% comment %} ТАБЛИЦА ЗАЯВОК {% endcomment %}
         <div class="table-responsive">
-        <table class="table table-hover table-bordered table-sm my_table">
+        <table class="table table-hover table-bordered table-sm my_table  ">
             <thead>
-                <tr>                
+                <tr class="">                
                     <th class="col-1">Дата</th>
                     <th class="col-1">Номер заявки</th>
                     <th class="col-1">Магазин</th>

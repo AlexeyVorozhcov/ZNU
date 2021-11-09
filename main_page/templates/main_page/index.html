@@ -2,20 +2,74 @@
 {% load  static %}
 
 {% block css %}
-    <link href= {% static 'styles.css' %} rel="stylesheet">
+    
 {% endblock css %}
     
 
 
 {% block content %}
-    <div class="row  text-center my-2">
-        <div class="d-grid gap-3">  
-            <div class="col-12">
-                <a href="{% url 'zayavki:page_view' %}" class="btn btn-primary">Заявки на уценку</a>            
-            </div>    
-            <div class="col-12">
-                <a href="{% url 'zayavki:page_view' %}" class="btn btn-primary">Аттестация продавцов-консультантов</a>           
-            </div> 
-        </div>            
-    </div>       
-{% endblock content %}
+
+<div class="card-deck d-flex justify-content-center mt-3">
+  <div class="row text-center justify-content-center">
+  <div class="card col-sm-12 col-md-6 col-lg-3 me-2 mb-2">
+    <img class="card-img-top img-fluid rounded mt-2" src="{% static 'title01.jpg' %}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Заявки на уценку</h5>
+     </div>
+    <div class="card-footer bg-white border-0">
+        <a href="{% url 'zayavki:page_view' %}" class="btn btn-primary ">Перейти</a>
+    </div>
+  </div>
+  <div class="card col-sm-12 col-md-6 col-lg-3 me-2 mb-2">
+    <img class="card-img-top img-fluid rounded mt-2" src="{% static 'title02.jpg' %}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Аттестации продавцов</h5>     
+    </div>
+    <div class="card-footer bg-white border-0">
+        <a href="#" class="btn btn-primary disabled">Недоступно</a>
+    </div>
+  </div>
+  <div class="card col-sm-12 col-md-6 col-lg-3 me-2 mb-2">
+    <img class="card-img-top img-fluid rounded mt-2" src="{% static 'title02.jpg' %}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Разработка</h5>     
+    </div>
+    <div class="card-footer bg-white border-0">
+        <a href="#" class="btn btn-primary disabled">Недоступно</a>
+    </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- 
+<div class="card-deck justify-content-center">
+
+  
+    <div class="card col-4 text-center">
+      <div class="card-body">        
+        <img class="card-img-top img-fluid rounded" src={% static 'title01.jpg' %} alt="Card image cap">
+        <h5 class="card-title">Заявки на уценку</h5>        
+        <a href="{% url 'zayavki:page_view' %}" class="btn btn-primary">Перейти</a>
+        <div class="card-footer">
+            <small class="text-muted">Last updated 3 mins ago</small>
+        </div>
+      </div>
+    
+  </div>
+  
+    <div class="card col-4 text-center">
+      <div class="card-body ">
+        <img class="card-img-top img-fluid rounded" src={% static 'title02.jpg' %} alt="Card image cap">
+        <h5 class="card-title">Аттестация продавцов-консультантов</h5>        
+        <a href="#" class="btn btn-primary">Перейти</a>
+        <div class="card-footer">
+            <small class="text-muted">Last updated 3 mins ago</small>
+        </div>
+      </div>
+    </div>
+ 
+
+</div>
+
+{% endblock content %} -->
