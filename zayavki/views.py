@@ -67,10 +67,11 @@ def get_data_from_model_Zayavka(filter, user, page):
     bd_for_user = None
     # если Магазин, то отбираются все заявки с этим магазином
     if user.role.namerole == "Магазин":
-        bd_for_user = Zayavka.objects.filter(user__shop=user.shop)
+        bd_for_user = Zayavka.objects.filter(user__shop=user.shop).order_by("-data")
     else:
         bd_for_user = Zayavka.objects.filter(
-            category__in=user.role.work_category.all())
+            category__in=user.role.work_category.all()).order_by("-data")
+    
     arch = bd_for_user.filter(status5=True)  # архивные
     all_z = bd_for_user.filter(status5=False)  # все кроме архивных
     resh = all_z.filter(status1=False, status2=False)  # ожидающие решения
@@ -80,17 +81,17 @@ def get_data_from_model_Zayavka(filter, user, page):
     ok_utc = ok_resh.filter(status3=True)  # уцененные в 1С
     utc_inshop = ok_utc.filter(status4=False)  # ожидающие уценки в магазине
     ok_utc_inshop = ok_utc.filter(status4=True)  # уцененные в магазине
-    if not filter or filter == "all":
+    if not filter or filter == DICT_OF_FILTERS["Все активные"]:
         result = all_z
-    if filter == "resh":
+    if filter == DICT_OF_FILTERS["Ждут рассмотрения"]:
         result = resh
-    if filter == "arch":
+    if filter == DICT_OF_FILTERS["Архивные"]:
         result = arch
-    if filter == "otkl":
+    if filter == DICT_OF_FILTERS["Отклоненные"]:
         result = not_resh
-    if filter == "utc":
+    if filter == DICT_OF_FILTERS["Ждут уценки в 1С"]:
         result = utc
-    if filter == "utc_inshop":
+    if filter == DICT_OF_FILTERS["Ждут уценки на витрине"]:
         result = utc_inshop
     paginator = Paginator(result, KOL_RECORDS_ON_PAGE)
     result_paginator = paginator.page(page)
@@ -101,11 +102,12 @@ def get_data_from_model_Zayavka(filter, user, page):
 def add_zayavka(request):
     '''
     Просмотр(GET) или создание(POST) заявки.
-    
+    Трабл - программа не изменяет заявки, а создает новые со теми же полями, с новым id
+
     '''
     name_page = None
     if request.method == "POST":
-        form = AddZayavkaForm(data=request.POST)
+        form = AddZayavkaForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             new_zayavka = form.save()
             new_zayavka.user = request.user
@@ -118,6 +120,7 @@ def add_zayavka(request):
         id_zayavka = request.GET.get('idz', None)   # получаем idz
         if id_zayavka: 
             zayavka = Zayavka.objects.get(id=id_zayavka) # заявка по id
+            print(zayavka)
             name_page="Просмотр заявки"
         else: 
             zayavka = None
