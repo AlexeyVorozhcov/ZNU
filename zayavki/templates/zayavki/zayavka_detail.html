@@ -7,7 +7,8 @@
 
 
 {% block content %}
-<h2 class="pb-2">Просмотр заявки</h2>
+<a href="{% url 'zayavki:page_view' %}" class="btn btn-primary mt-1 mb-3">Вернуться к списку</a>
+<h2 class="px-2">Просмотр заявки</h2>
 <p> Дата: {{ zayavka.data }} </p>
 <p> Магазин: {{ zayavka.user.shop }} </p>
 <p> Код товара:  {{ zayavka.code }}</p>
@@ -29,6 +30,6 @@
 <p> Пояснения: {{ zayavka.clarification }}</p>
 <p> Статус: 
 <br>
-<a href="" class="btn btn-primary mt-5">Редактировать заявку</a>
+<a href="{% url 'zayavki:zayavka-update' zayavka.id %}" class="btn btn-primary mt-5">Редактировать заявку</a>
                
 {% endblock content %}

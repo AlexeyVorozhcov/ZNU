@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import User, Category, Shops
+from django.urls import reverse
 
 
 # Create your models here.
@@ -34,3 +35,7 @@ class Zayavka(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    def get_absolute_url(self):
+        return f'/zayavki/{self.id}'
+    

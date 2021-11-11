@@ -9,8 +9,9 @@
 {% block content %}
 
 <div class="row mt-1">
-     <form action="{% url 'zayavki:add_zayavka' %}" method="post" enctype="multipart/form-data">
+     <form action="" method="post" enctype="multipart/form-data">
      {% csrf_token %} 
+     
      <div class="col-md-3 col-sm-12">
         <label class="form-label mb-0" for={{form.code.id_for_input}}>Код товара:</label>
         {{form.code}}
@@ -49,8 +50,9 @@
         <label class="form-label mb-0 mt-1" for={{form.foto1.id_for_input}}>Фото 2:</label>
         {{form.foto1}}
     </div> 
-    <input class="col-md-6 col-sm-12 btn btn-info btn-block mt-2 " type="submit" value="Сохранить">    
-    
+    <input class="col-md-3 col-sm-12 btn btn-info btn-block mt-2 " type="submit" value="Сохранить">    
+    <a href="" class="col-md-3 col-sm-12 btn btn-info btn-block mt-2 ">Отменить</a>   
+    </form>
 
 </div>
                

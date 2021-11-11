@@ -37,6 +37,7 @@ class AddZayavkaForm(forms.ModelForm):
     attrs_for_foto1 = {"class" : "form-control form-control-sm fw-bold",'placeholder' : "Добавьте фото №1"}                
     attrs_for_foto2 = {"class" : "form-control form-control-sm fw-bold",'placeholder' : "Добавьте фото №2"}
     
+    
     code = forms.CharField(label="Код номенклатуры:", widget=forms.TextInput(attrs=attrs_for_code))
     name = forms.CharField(label="Наименование номенклатуры:",widget=forms.TextInput(attrs=attrs_for_name))
     category = forms.ModelChoiceField (Category.objects, label="Категория:",widget=forms.Select(attrs={"class":name_class}))
@@ -49,4 +50,10 @@ class AddZayavkaForm(forms.ModelForm):
         model = Zayavka
         fields = ("code", "name", "category","description", "clarification", "foto1", "foto2")    
 
+    def set_user(self, new_user):
+        data = self.data.copy()
+        data['user'] = new_user
+        self.data = data
+           
+        
     

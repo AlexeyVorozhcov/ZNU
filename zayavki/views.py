@@ -25,7 +25,7 @@ class ZayavkaDetail(DetailView):
 class ZayavkaUpdate(UpdateView):
     model = Zayavka
     template_name = "zayavki/add_zayavka.html"
-    
+    form_class = AddZayavkaForm
 
 
 @login_required()
@@ -110,38 +110,25 @@ def get_data_from_model_Zayavka(filter, user, page):
 
 
 @login_required
-def add_zayavka(request, pk=None):
+def add_zayavka(request):
     '''
     Просмотр(GET) или создание(POST) заявки.
     Трабл - программа не изменяет заявки, а создает новые со теми же полями, с новым id
 
     '''
-    name_page = None
-    zayavka = get_object_or_404(Zayavka, pk=pk) # заявка по id
+    name_page = None    
     if request.method == "POST":
-        form = AddZayavkaForm(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            
-            new_zayavka = form.save()
-            if not request.user:
-                new_zayavka.user = request.user
-                new_zayavka.save()
+        form = AddZayavkaForm(data=request.POST, files=request.FILES, initial={'user': request.user})
+        if form.is_valid(): 
+            added_zayavka = form.save() 
+            added_zayavka.user = request.user
+            added_zayavka.save()
+                       
         else:
-            pass  # TODO вывести сообщение
+            print (form.errors)
         return HttpResponseRedirect(reverse('zayavki:page_view'))
-    else:
-        # GET. В параметрах идет idz - id заявки
-        id_zayavka = request.GET.get('idz', None)   # получаем idz
-        if id_zayavka: 
-            zayavka = Zayavka.objects.get(id=id_zayavka) # заявка по id
-            print(zayavka)
-            name_page="Просмотр заявки"
-            
-        else: 
-            zayavka = None
-            name_page="Создание заявки"
-        form = AddZayavkaForm(instance=zayavka)
-        
+ 
+    form = AddZayavkaForm()    
     template = "zayavki/add_zayavka.html"
     context = {"form": form,
                "title": name_page,
