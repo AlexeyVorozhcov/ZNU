@@ -8,28 +8,33 @@
 
 {% block content %}
 <a href="{% url 'zayavki:page_view' %}" class="btn btn-primary mt-1 mb-3">Вернуться к списку</a>
-<h2 class="px-2">Просмотр заявки</h2>
-<p> Дата: {{ zayavka.data }} </p>
-<p> Магазин: {{ zayavka.user.shop }} </p>
-<p> Код товара:  {{ zayavka.code }}</p>
-<p> Наименование:  {{ zayavka.name }}</p>
-<p> Категория:  {{ zayavka.category }}</p>
-<p> Описание товарного вида: {{ zayavka.description }}</p>
-<p> Фото: 
-    {% if zayavka.foto1 %}
-        <a href="/media/{{zayavka.foto1}}"  target="_blank" class="text-decoration-none">
-            <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
-        </a>
-    {% endif %}
-    {% if zayavka.foto2 %}
-        <a href="/media/{{zayavka.foto2}}"  target="_blank" class="text-decoration-none">
-            <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
-        </a>
-    {% endif %}                   
-</p>
-<p> Пояснения: {{ zayavka.clarification }}</p>
-<p> Статус: 
-<br>
-<a href="{% url 'zayavki:zayavka-update' zayavka.id %}" class="btn btn-primary mt-5">Редактировать заявку</a>
-               
+{% if zayavka.user == user %}    
+    
+    <h2 class="px-2">Просмотр заявки</h2>
+    <p> Дата: {{ zayavka.data }} </p>
+    <p> Магазин: {{ zayavka.user.shop }} </p>
+    <p> Код товара:  {{ zayavka.code }}</p>
+    <p> Наименование:  {{ zayavka.name }}</p>
+    <p> Категория:  {{ zayavka.category }}</p>
+    <p> Описание товарного вида: {{ zayavka.description }}</p>
+    <p> Фото: 
+        {% if zayavka.foto1 %}
+            <a href="/media/{{zayavka.foto1}}"  target="_blank" class="text-decoration-none">
+                <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
+            </a>
+        {% endif %}
+        {% if zayavka.foto2 %}
+            <a href="/media/{{zayavka.foto2}}"  target="_blank" class="text-decoration-none">
+                <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
+            </a>
+        {% endif %}                   
+    </p>
+    <p> Пояснения: {{ zayavka.clarification }}</p>
+    <p> Статус: </p>
+    <br>
+    <a href="{% url 'zayavki:zayavka-update' zayavka.id %}" class="btn btn-primary mt-5">Редактировать заявку</a>
+ {% else %}
+    <p> Данная заявка вам недоступна! </p>
+ 
+ {% endif %}              
 {% endblock content %}

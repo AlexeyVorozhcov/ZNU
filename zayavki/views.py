@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import UpdateView, DetailView
+from django.views.generic import UpdateView, DetailView, CreateView
 
 
 KOL_RECORDS_ON_PAGE = 10
@@ -21,12 +21,22 @@ class ZayavkaDetail(DetailView):
     model = Zayavka
     template_name = "zayavki/zayavka_detail.html"
     context_object_name = "zayavka"
+    # TODO добавить проверку существования заявки
+    
 
 class ZayavkaUpdate(UpdateView):
     model = Zayavka
-    template_name = "zayavki/add_zayavka.html"
+    template_name = "zayavki/add_zayavka.html"    
     form_class = AddZayavkaForm
 
+# class ZayavkaCreate(CreateView):
+#     model = Zayavka
+#     template_name = "zayavki/ADD_ZAYAVKA.html"
+#     form_class = AddZayavkaForm
+
+    # def form_valid(self, form):
+    #         form.instance.created_by = self.request.user
+    #         return super(MyModelAdd, self).form_valid(form)
 
 @login_required()
 def page_view(request):
@@ -78,10 +88,10 @@ def get_data_from_model_Zayavka(filter, user, page):
     bd_for_user = None
     # если Магазин, то отбираются все заявки с этим магазином
     if user.role.namerole == "Магазин":
-        bd_for_user = Zayavka.objects.filter(user__shop=user.shop).order_by("-data")
+        bd_for_user = Zayavka.objects.filter(user__shop=user.shop).order_by("-id")
     else:
         bd_for_user = Zayavka.objects.filter(
-            category__in=user.role.work_category.all()).order_by("-data")
+            category__in=user.role.work_category.all()).order_by("-id")
     
     arch = bd_for_user.filter(status5=True)  # архивные
     all_z = bd_for_user.filter(status5=False)  # все кроме архивных
