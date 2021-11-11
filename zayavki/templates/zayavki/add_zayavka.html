@@ -27,8 +27,7 @@
         <label class="form-label mb-0 mt-1" for={{form.description.id_for_input}}>Описание товарного вида:</label>
         {{form.description}}
         {% if form.instance.foto1 %}
-            <a href="/media/{{form.instance.foto1}}"  target="_blank">
-                {{form.foto1.url}}
+            <a href="/media/{{form.instance.foto1}}"  target="_blank">                
                 <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
             </a>
         {% endif %}
