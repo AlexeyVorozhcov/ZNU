@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from zayavki.models import Zayavka
 from zayavki.forms import AddZayavkaForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import HttpResponseRedirect
 from django.urls import reverse
+from django.views.generic import UpdateView, DetailView
 
 
 KOL_RECORDS_ON_PAGE = 10
@@ -15,6 +16,16 @@ DICT_OF_FILTERS = {
             "Ждут уценки на витрине": "utc_inshop",
             "Отклоненные": "otkl",
             "Архивные": "arch"}
+
+class ZayavkaDetail(DetailView):
+    model = Zayavka
+    template_name = "zayavki/zayavka_detail.html"
+    context_object_name = "zayavka"
+
+class ZayavkaUpdate(UpdateView):
+    model = Zayavka
+    template_name = "zayavki/add_zayavka.html"
+    
 
 
 @login_required()
@@ -99,20 +110,22 @@ def get_data_from_model_Zayavka(filter, user, page):
 
 
 @login_required
-def add_zayavka(request):
+def add_zayavka(request, pk=None):
     '''
     Просмотр(GET) или создание(POST) заявки.
     Трабл - программа не изменяет заявки, а создает новые со теми же полями, с новым id
 
     '''
     name_page = None
+    zayavka = get_object_or_404(Zayavka, pk=pk) # заявка по id
     if request.method == "POST":
         form = AddZayavkaForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             
             new_zayavka = form.save()
-            new_zayavka.user = request.user
-            new_zayavka.save()
+            if not request.user:
+                new_zayavka.user = request.user
+                new_zayavka.save()
         else:
             pass  # TODO вывести сообщение
         return HttpResponseRedirect(reverse('zayavki:page_view'))
@@ -123,6 +136,7 @@ def add_zayavka(request):
             zayavka = Zayavka.objects.get(id=id_zayavka) # заявка по id
             print(zayavka)
             name_page="Просмотр заявки"
+            
         else: 
             zayavka = None
             name_page="Создание заявки"

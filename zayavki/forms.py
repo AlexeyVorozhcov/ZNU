@@ -1,5 +1,6 @@
 from typing import Dict
 from django import forms
+
 from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
 from django.shortcuts import resolve_url
@@ -12,6 +13,9 @@ def get_gategories(qset:QuerySet):
         for i, category in enumerate(all):
             result.append((str(i), category))
         return result    
+
+
+
 
 class AddZayavkaForm(forms.ModelForm):
     # id_user=0

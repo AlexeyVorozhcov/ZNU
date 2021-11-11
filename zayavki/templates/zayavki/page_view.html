@@ -59,7 +59,7 @@
                     <td>{{zayavka.user.shop}}</td>
                     <td>{{zayavka.code}}</td>
                     <td>
-                        <a href="{% url 'zayavki:add_zayavka'%}?idz={{zayavka.id}}"> {{zayavka}} </a>
+                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id%}"> {{zayavka}} </a>
                     </td>
                     <td>{{zayavka.description}}
                         {% if zayavka.foto1 %}
