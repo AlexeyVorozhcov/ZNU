@@ -26,14 +26,14 @@
     <div class="col-md-6 col-sm-12">
         <label class="form-label mb-0 mt-1" for={{form.description.id_for_input}}>Описание товарного вида:</label>
         {{form.description}}
-        {% if form.foto1 %}
-            <a href="/media/{{form.foto1.path}}"  target="_blank">
+        {% if form.instance.foto1 %}
+            <a href="/media/{{form.instance.foto1}}"  target="_blank">
                 {{form.foto1.url}}
                 <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
             </a>
         {% endif %}
-        {% if form.foto2.path %}
-            <a href="/media/{{form.foto2.path}}"  target="_blank">
+        {% if form.instance.foto2 %}
+            <a href="/media/{{form.instance.foto2}}"  target="_blank">
                 <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
             </a>
         {% endif %}

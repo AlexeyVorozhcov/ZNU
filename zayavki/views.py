@@ -109,6 +109,7 @@ def add_zayavka(request):
     if request.method == "POST":
         form = AddZayavkaForm(data=request.POST, files=request.FILES)
         if form.is_valid():
+            
             new_zayavka = form.save()
             new_zayavka.user = request.user
             new_zayavka.save()
