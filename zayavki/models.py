@@ -24,8 +24,8 @@ class Zayavka(models.Model):
     status2 = models.BooleanField(default=False)  # отклонено
     status3 = models.BooleanField(default=False)  # уценено
     status4 = models.BooleanField(default=False)  # ценник сменен
-    status5 = models.BooleanField(default=False)  # остальные поля - резервные
-    status6 = models.BooleanField(default=False)
+    status5 = models.BooleanField(default=False)  # в архиве
+    status6 = models.BooleanField(default=False)    # остальные поля - резервные
     
     clarification_of_manager = models.CharField(max_length=150, blank=True)
 

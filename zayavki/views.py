@@ -14,6 +14,7 @@ DICT_OF_FILTERS = {
     "Ждут рассмотрения": "resh",
     "Ждут уценки в 1С": "utc",
     "Ждут уценки на витрине": "utc_inshop",
+    "Уцененные" : "ok_utc_inshop",
     "Отклоненные": "otkl",
     "Архивные": "arch"}
 
@@ -45,40 +46,121 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
     model = Zayavka
     template_name = "zayavki/zayavka_detail.html"
 
+    def get_context_data(self, **kwargs):
+        # Добавить данные в контекст, передаваемый в шаблон
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Просмотр заявки"
+        context["name_page"] = "Просмотр заявки"
+        context["access_open"] = self.is_access_open()        
+        context["status_as_text"] = self.get_status_as_text()        
+        context["can_be_edited"] = self.is_can_be_edited()        
+        context["can_be_approved"] = self.is_can_be_approved()        
+        context["can_be_discounted_in_1C"] = self.is_can_be_discounted_in_1C()        
+        context["can_be_discounted_in_shop"] = self.is_can_be_discounted_in_shop()        
+        context["can_be_sent_to_archive"] = self.is_can_be_sent_to_archive()        
+        context["can_be_restored"] = self.is_can_be_restored()        
+        context["can_be_cancel_approved"] = self.is_can_be_cancel_approved()        
+        context["can_be_cancel_discounted_in_1C"] = self.is_can_be_cancel_discounted_in_1C()        
+        context["can_be_cancel_discounted_in_shop"] = self.is_can_be_cancel_discounted_in_shop()        
+        return context
+    
+    def is_access_open(self):
+        # открывать или нет заявку текущему пользователю
+        if self.get_object().user.shop == self.request.user.shop or self.request.user.role.namerole[:3] == "Мен":
+            return True
+        else:
+            return False
+        
+    def get_status_as_text(self):
+        # получить статус заявки в виде текста
+        zayavka = self.get_object()
+        result = ""
+        if zayavka.status4: result = "Одобрена, уценка в 1С - ОК, уценка на витрине - ОК"
+        elif zayavka.status3: result = "Одобрена, уценка в 1С - ОК, ожидает уценки на витрине"
+        elif zayavka.status2: result = "Отклонена"
+        elif zayavka.status1: result = "Одобрена, ожидает уценки в 1С"  
+        else: result = "На рассмотрении"
+        if zayavka.status5: result += ". АРХИВНАЯ"
+        return result
+    
+    def is_can_be_edited(self):
+        # можно ли заявку редактировать
+        zayavka = self.get_object()
+        if zayavka.user.shop == self.request.user.shop and not zayavka.status1 and not zayavka.status2:
+            return True
+        else:
+            return False
+        
+    def is_can_be_approved (self):
+        # можно ли согласовывать
+        zayavka = self.get_object()
+        if not zayavka.status1 and not zayavka.status2 and not zayavka.status5 and self.request.user.role.namerole[:3] == "Мен":
+            return True
+        else: 
+            return False  
+         
+    def is_can_be_cancel_approved (self):
+        # можно ли согласовывать
+        zayavka = self.get_object()
+        if (zayavka.status1 or zayavka.status2) and not zayavka.status3 and not zayavka.status5 and self.request.user.role.namerole[:3] == "Мен":
+            return True
+        else: 
+            return False      
+        
+    def is_can_be_discounted_in_1C (self):
+        # можно ли уценять в 1С
+        zayavka = self.get_object()
+        if zayavka.status1 and not zayavka.status3 and not zayavka.status5 and self.request.user.role.namerole == "Менеджер по уценке":
+            return True
+        else: 
+            return False  
+    
+    def is_can_be_cancel_discounted_in_1C (self):
+        # можно ли уценять в 1С
+        zayavka = self.get_object()
+        if zayavka.status3 and not zayavka.status4 and not zayavka.status5 and self.request.user.role.namerole == "Менеджер по уценке":
+            return True
+        else: 
+            return False     
+        
+    def is_can_be_discounted_in_shop (self):
+        # можно ли уценять в магазине
+        zayavka = self.get_object()
+        if zayavka.status3 and not zayavka.status4 and not zayavka.status5 and self.request.user.role.namerole == "Магазин":
+            return True
+        else: 
+            return False  
+        
+    def is_can_be_cancel_discounted_in_shop (self):
+        # можно ли уценять в магазине
+        zayavka = self.get_object()
+        if zayavka.status4 and not zayavka.status5 and self.request.user.role.namerole == "Магазин":
+            return True
+        else: 
+            return False      
+        
+    def is_can_be_sent_to_archive (self):
+        # можно ли уценять в магазине
+        zayavka = self.get_object()
+        if (zayavka.status4 or zayavka.status2) and not zayavka.status5 and (self.request.user.role.namerole == "Магазин" or self.request.user.role.namerole == "Менеджер по уценке"):
+            return True
+        else: 
+            return False      
+        
+    def is_can_be_restored (self):
+        # можно ли восстановить из архива
+        zayavka = self.get_object()
+        if zayavka.status5:
+            return True
+        else: 
+            return False      
+                  
+              
 
 class ZayavkaUpdate(LoginRequiredMixin, UpdateView):
     model = Zayavka
     template_name = "zayavki/zayavka_create.html"
     form_class = AddZayavkaForm
-
-
-# class ZayavkaList(LoginRequiredMixin, ListView):
-#     model = Zayavka
-#     paginate_by = KOL_RECORDS_ON_PAGE
-#     template_name = "zayavki/zayavka_list.html"
-#     context_object_name = "zayavki"
-
-#     def get_context_data(self, **kwargs):
-#         # Добавить данные в контекст, передаваемый в шаблон
-#         context = super().get_context_data(**kwargs)
-#         context["title"] = "Заявки на уценку"
-#         context["name_page"] = "Заявки на уценку"
-#         context['filters'] = DICT_OF_FILTERS
-#         context['cur_filter'] = self.get_default_filter()
-#         return context
-
-#     def get_queryset(self):
-#         # запрос выборки из базы данных
-#         return get_data_from_model_Zayavka(self.get_default_filter(), self.request.user)
-
-#     def get_default_filter(self):
-#         # получить фильтр по умолчанию, который зависит от роли пользователя
-#         if self.request.user.role.namerole == "Магазин":
-#             return DICT_OF_FILTERS["Ждут уценки на витрине"]
-#         elif self.request.user.role.namerole[:3] == "Мен":
-#             return DICT_OF_FILTERS["Ждут рассмотрения"]
-#         else:
-#             return DICT_OF_FILTERS["Все активные"]
 
 
 class ZayavkaFilterList(LoginRequiredMixin, ListView):
@@ -152,32 +234,8 @@ def get_data_from_model_Zayavka(filter, user):
         result = utc
     if filter == DICT_OF_FILTERS["Ждут уценки на витрине"]:
         result = utc_inshop
+    if filter == DICT_OF_FILTERS["Уцененные"]:
+        result = ok_utc_inshop   
     return result
 
 
-# @login_required
-# def add_zayavka(request):
-#     '''
-#     Просмотр(GET) или создание(POST) заявки.
-#     Трабл - программа не изменяет заявки, а создает новые со теми же полями, с новым id
-
-#     '''
-#     name_page = None
-#     if request.method == "POST":
-#         form = AddZayavkaForm(data=request.POST, files=request.FILES, initial={
-#                               'user': request.user})
-#         if form.is_valid():
-#             added_zayavka = form.save()
-#             added_zayavka.user = request.user
-#             added_zayavka.save()
-
-#         else:
-#             print(form.errors)
-#         return HttpResponseRedirect(reverse('zayavki:zayavki_list'))
-
-#     form = AddZayavkaForm()
-#     template = "zayavki/add_zayavka.html"
-#     context = {"form": form,
-#                "title": name_page,
-#                "name_page": name_page}
-#     return render(request, template, context)

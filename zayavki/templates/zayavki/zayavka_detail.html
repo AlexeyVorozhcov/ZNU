@@ -7,37 +7,88 @@
 
 
 {% block content %}
-<a href="{% url 'zayavki:zayavki_list' %}" class="btn btn-primary mt-1 mb-3">Вернуться к списку</a>
-{% if zayavka.user == user or user.role != "Магазин" %}    
-    
-    <h2 class="px-2">Просмотр заявки</h2>
-    <p> Дата: {{ zayavka.data }} </p>
-    <p> Магазин: {{ zayavka.user.shop }} </p>
-    <p> Код товара:  {{ zayavka.code }}</p>
-    <p> Наименование:  {{ zayavka.name }}</p>
-    <p> Категория:  {{ zayavka.category }}</p>
-    <p> Описание товарного вида: {{ zayavka.description }}</p>
-    <p> Фото: 
-        {% if zayavka.foto1 %}
-            <a href="/media/{{zayavka.foto1}}"  target="_blank" class="text-decoration-none">
-                <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
-            </a>
+    <a href="{% url 'zayavki:zayavki_list' %}" class="btn btn-link mb-2">Вернуться к списку</a>
+    {% comment %} TODO сделать редирект на предыдущую страницу {% endcomment %}
+
+    {% if access_open %}  
+        <h2>Просмотр заявки</h2>
+        <p> Дата: {{ zayavka.data }} </p>
+        <p> Магазин: {{ zayavka.user.shop }} </p>
+        <p> Код товара:  {{ zayavka.code }}</p>
+        <p> Наименование:  {{ zayavka.name }}</p>
+        <p> Категория:  {{ zayavka.category }}</p>
+        <p> Описание товарного вида: {{ zayavka.description }}</p>
+        <p> Фото: 
+            {% if zayavka.foto1 %}
+                <a href="/media/{{zayavka.foto1}}"  target="_blank" class="text-decoration-none">
+                    <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
+                </a>
+            {% endif %}
+            {% if zayavka.foto2 %}
+                <a href="/media/{{zayavka.foto2}}"  target="_blank" class="text-decoration-none">
+                    <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
+                </a>
+            {% endif %}  </p>             
+        <p> Пояснения: {{ zayavka.clarification }}</p>
+        <p> Статус: {{ status_as_text }}</p>
+        
+        {% if can_be_edited %}
+        <a href="{% url 'zayavki:zayavka-update' zayavka.id %}" 
+            class="btn btn-primary mt-2"> Редактировать заявку </a>
+        {% endif %} 
+
+        {% if can_be_approved %}
+            <a href="# " 
+            class="btn btn-success mt-2"> Заявку одобряю, новая цена назначена </a>
+            <a href="#" 
+            class="btn btn-danger mx-2 mt-2"> Отклонить заявку </a>
         {% endif %}
-        {% if zayavka.foto2 %}
-            <a href="/media/{{zayavka.foto2}}"  target="_blank" class="text-decoration-none">
-                <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
-            </a>
-        {% endif %}                   
-    </p>
-    <p> Пояснения: {{ zayavka.clarification }}</p>
-    <p> Статус: </p>
+
+        {% if can_be_cancel_approved %}
+            <a href="#" 
+            class="btn btn-warning mx-2 mt-2"> Отменить решение </a>
+        {% endif %}
+
+        {% if can_be_discounted_in_1C %}
+            <a href="# " 
+            class="btn btn-success mt-2"> Уценка в 1С произведена </a>
+            <a href="#" 
+            class="btn btn-danger mx-2 mt-2"> В архив </a>
+        {% endif %}
+
+        {% if can_be_cancel_discounted_in_1C %}
+            <a href="#" 
+            class="btn btn-warning mx-2 mt-2"> Отменить уценку в 1С </a>
+        {% endif %}
+
+        {% if can_be_discounted_in_shop %}
+            <a href="# " 
+            class="btn btn-success mt-2"> Товар на витрине уценен </a>
+            <a href="#" 
+            class="btn btn-danger mx-2 mt-2"> В архив </a>            
+        {% endif %}
+
+        {% if can_be_cancel_discounted_in_shop %}
+            <a href="#" 
+            class="btn btn-warning mx-2 mt-2"> Отменить уценку в магазине </a>
+        {% endif %}
+
+        {% if can_be_sent_to_archive %}
+            <a href="#" 
+            class="btn btn-warning mx-2 mt-2"> Отправить в архив </a>
+        {% endif %}
+
+        {% if can_be_restored %}
+            <a href="#" 
+            class="btn btn-warning mx-2 mt-2"> Восстановить </a>
+        {% endif %}
+
+        
+
+        
+        
+    {% else %}
+        <p> Данная заявка вам недоступна! </p>
     
-    <a href="{% url 'zayavki:zayavka-update' zayavka.id %}" 
-        class="btn btn-primary mt-2 {% if zayavka.user != user or zayavka.status1 or zayavka.status2 %} disabled {% endif %} ">
-        Редактировать заявку
-        </a>
- {% else %}
-    <p> Данная заявка вам недоступна! </p>
- 
- {% endif %}              
+    {% endif %}              
 {% endblock content %}
