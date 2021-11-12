@@ -9,7 +9,7 @@ from django.views.generic import UpdateView, DetailView, CreateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-KOL_RECORDS_ON_PAGE = 50
+KOL_RECORDS_ON_PAGE = 8
 DICT_OF_FILTERS = {
     "Все активные": "all",
     "Ждут рассмотрения": "resh",
@@ -44,7 +44,7 @@ class ZayavkaCreate(CreateView):
 
 class ZayavkaDetail(DetailView):
     model = Zayavka
-    template_name = "zayavki/zayavka_create.html"
+    template_name = "zayavki/zayavka_detail.html"
 
 
 class ZayavkaUpdate(UpdateView):
@@ -55,10 +55,10 @@ class ZayavkaUpdate(UpdateView):
 
 class ZayavkaList(ListView):
     model = Zayavka
-    #paginate_by = 50
+    paginate_by = KOL_RECORDS_ON_PAGE
     template_name = "zayavki/zayavka_list.html"
     context_object_name = "zayavki"
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Заявки на уценку"
@@ -81,7 +81,7 @@ class ZayavkaList(ListView):
 
 class ZayavkaFilterList(ListView):
     model = Zayavka
-    #paginate_by = 50
+    paginate_by = KOL_RECORDS_ON_PAGE
     template_name = "zayavki/zayavka_list.html"
     context_object_name = "zayavki"
 
@@ -162,9 +162,9 @@ def get_data_from_model_Zayavka(filter, user, page):
         result = utc
     if filter == DICT_OF_FILTERS["Ждут уценки на витрине"]:
         result = utc_inshop
-    paginator = Paginator(result, KOL_RECORDS_ON_PAGE)
-    result_paginator = paginator.page(page)
-    return result_paginator
+    # paginator = Paginator(result, KOL_RECORDS_ON_PAGE)
+    # result_paginator = paginator.page(page)
+    return result
 
 
 # @login_required
