@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404
 from zayavki.models import Zayavka
 from zayavki.forms import AddZayavkaForm
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.shortcuts import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import UpdateView, DetailView, CreateView, ListView
@@ -19,7 +18,7 @@ DICT_OF_FILTERS = {
     "Архивные": "arch"}
 
 
-class ZayavkaCreate(CreateView):
+class ZayavkaCreate(LoginRequiredMixin, CreateView):
 
     model = Zayavka
     template_name = "zayavki/zayavka_create.html"
@@ -42,104 +41,95 @@ class ZayavkaCreate(CreateView):
         return reverse('zayavki:zayavki_list')
 
 
-class ZayavkaDetail(DetailView):
+class ZayavkaDetail(LoginRequiredMixin, DetailView):
     model = Zayavka
     template_name = "zayavki/zayavka_detail.html"
 
 
-class ZayavkaUpdate(UpdateView):
+class ZayavkaUpdate(LoginRequiredMixin, UpdateView):
     model = Zayavka
     template_name = "zayavki/zayavka_create.html"
     form_class = AddZayavkaForm
 
 
-class ZayavkaList(ListView):
+# class ZayavkaList(LoginRequiredMixin, ListView):
+#     model = Zayavka
+#     paginate_by = KOL_RECORDS_ON_PAGE
+#     template_name = "zayavki/zayavka_list.html"
+#     context_object_name = "zayavki"
+
+#     def get_context_data(self, **kwargs):
+#         # Добавить данные в контекст, передаваемый в шаблон
+#         context = super().get_context_data(**kwargs)
+#         context["title"] = "Заявки на уценку"
+#         context["name_page"] = "Заявки на уценку"
+#         context['filters'] = DICT_OF_FILTERS
+#         context['cur_filter'] = self.get_default_filter()
+#         return context
+
+#     def get_queryset(self):
+#         # запрос выборки из базы данных
+#         return get_data_from_model_Zayavka(self.get_default_filter(), self.request.user)
+
+#     def get_default_filter(self):
+#         # получить фильтр по умолчанию, который зависит от роли пользователя
+#         if self.request.user.role.namerole == "Магазин":
+#             return DICT_OF_FILTERS["Ждут уценки на витрине"]
+#         elif self.request.user.role.namerole[:3] == "Мен":
+#             return DICT_OF_FILTERS["Ждут рассмотрения"]
+#         else:
+#             return DICT_OF_FILTERS["Все активные"]
+
+
+class ZayavkaFilterList(LoginRequiredMixin, ListView):
+    ''' 
+    Представление списка заявок.
+    '''
     model = Zayavka
     paginate_by = KOL_RECORDS_ON_PAGE
     template_name = "zayavki/zayavka_list.html"
     context_object_name = "zayavki"
-    
+
     def get_context_data(self, **kwargs):
+        # заполняем контекст для передачи в шаблон
         context = super().get_context_data(**kwargs)
         context["title"] = "Заявки на уценку"
         context["name_page"] = "Заявки на уценку"
         context['filters'] = DICT_OF_FILTERS
-        context['cur_filter'] = self.get_default_filter()
+        context['cur_filter'] = self.get_post_filter()
         return context
-
-    def get_queryset(self):
-        return get_data_from_model_Zayavka(self.get_default_filter(), self.request.user, 1)
-
+    
     def get_default_filter(self):
+        # получить фильтр по умолчанию, который зависит от роли пользователя
         if self.request.user.role.namerole == "Магазин":
             return DICT_OF_FILTERS["Ждут уценки на витрине"]
         elif self.request.user.role.namerole[:3] == "Мен":
             return DICT_OF_FILTERS["Ждут рассмотрения"]
         else:
             return DICT_OF_FILTERS["Все активные"]
+        
+    def get_post_filter(self):
+        # получить фильтр из post
+        return self.kwargs.get('filter', self.get_default_filter())
+    
+    def get_queryset(self):  
+        # получить выборку из таблицы      
+        return get_data_from_model_Zayavka(self.get_post_filter(), self.request.user)
 
 
-class ZayavkaFilterList(ListView):
-    model = Zayavka
-    paginate_by = KOL_RECORDS_ON_PAGE
-    template_name = "zayavki/zayavka_list.html"
-    context_object_name = "zayavki"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Заявки на уценку"
-        context["name_page"] = "Заявки на уценку"
-        context['filters'] = DICT_OF_FILTERS
-        context['cur_filter'] = self.kwargs['filter']
-        return context
-
-    def get_queryset(self):
-        return get_data_from_model_Zayavka(self.kwargs['filter'], self.request.user, 1)
-
-
-# @login_required()
-# def page_view(request):
-#     '''
-#     В GET-запросе могут прийти параметры page и/или filter.
-#     '''
-#     template = "zayavki/zayavki_list.html"  # шаблон страницы
-#     page = request.GET.get('page', None) # выдергиваем из запроса page; если его нет - None
-#     cur_filter = request.GET.get('filter', None) # выдергиваем из запроса filter; если его нет - None
-#     if not cur_filter:
-#         # если filter не передан, или передано несуществующее значение, устанавливается фильтр
-#         # по умолчанию в зависимости от роли пользователя
-#         cur_filter = get_default_filter(user=request.user)
-#     if not page:
-#         # если page не передан или передано некорректное значение,
-#         # устанавливается первая страница пагинатора
-#         # TODO добавить проверку на page=положительное число
-#         page = 1
-
-#     context = {
-#         "filters": DICT_OF_FILTERS,
-#         "cur_filter": cur_filter,
-#         "title": "Заявки на уценку",
-#         "data_from_model_Zayavka": get_data_from_model_Zayavka(filter=cur_filter, user=request.user, page=page)
-#     }
-#     return render(request, template, context)
-
-
-def get_data_from_model_Zayavka(filter, user, page):
+def get_data_from_model_Zayavka(filter, user):
     '''
     Возвращает выборку из таблицы по условиям фильтра. Если пользователь Магазин - выборка записей этого магазина. 
     Если пользователь Менеджер - выборка тех записей, категория которых есть в списке рабочих категорий менеджера.
-    Далее выборка по статусам в зависимости от фильтра.
+    Далее выборка по статусам в зависимости от фильтра. Сортировка по id
     '''
-    result = None  # возвращаемый результат
-    # первичная выборка базы для юзера (записи только для конкретного магазина или менеджера)
-    bd_for_user = None
+    result = None  # возвращаемый результат    
+    bd_for_user = None # первичная выборка базы для юзера (записи только для конкретного магазина или менеджера)
     # если Магазин, то отбираются все заявки с этим магазином
     if user.role.namerole == "Магазин":
-        bd_for_user = Zayavka.objects.filter(
-            user__shop=user.shop).order_by("-id")
+        bd_for_user = Zayavka.objects.filter(user__shop=user.shop).order_by("-id")
     else:
-        bd_for_user = Zayavka.objects.filter(
-            category__in=user.role.work_category.all()).order_by("-id")
+        bd_for_user = Zayavka.objects.filter(category__in=user.role.work_category.all()).order_by("-id")
 
     arch = bd_for_user.filter(status5=True)  # архивные
     all_z = bd_for_user.filter(status5=False)  # все кроме архивных
@@ -162,8 +152,6 @@ def get_data_from_model_Zayavka(filter, user, page):
         result = utc
     if filter == DICT_OF_FILTERS["Ждут уценки на витрине"]:
         result = utc_inshop
-    # paginator = Paginator(result, KOL_RECORDS_ON_PAGE)
-    # result_paginator = paginator.page(page)
     return result
 
 

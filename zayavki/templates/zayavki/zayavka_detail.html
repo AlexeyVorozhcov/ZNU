@@ -8,7 +8,7 @@
 
 {% block content %}
 <a href="{% url 'zayavki:zayavki_list' %}" class="btn btn-primary mt-1 mb-3">Вернуться к списку</a>
-{% if zayavka.user == user %}    
+{% if zayavka.user == user or user.role != "Магазин" %}    
     
     <h2 class="px-2">Просмотр заявки</h2>
     <p> Дата: {{ zayavka.data }} </p>
@@ -31,8 +31,11 @@
     </p>
     <p> Пояснения: {{ zayavka.clarification }}</p>
     <p> Статус: </p>
-    <br>
-    <a href="{% url 'zayavki:zayavka-update' zayavka.id %}" class="btn btn-primary mt-5">Редактировать заявку</a>
+    
+    <a href="{% url 'zayavki:zayavka-update' zayavka.id %}" 
+        class="btn btn-primary mt-2 {% if zayavka.user != user or zayavka.status1 or zayavka.status2 %} disabled {% endif %} ">
+        Редактировать заявку
+        </a>
  {% else %}
     <p> Данная заявка вам недоступна! </p>
  
