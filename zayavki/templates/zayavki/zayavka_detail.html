@@ -2,12 +2,12 @@
 {% load  static %}
 
 {% block name_app %}
-    <a class="navbar-brand flex-grow-1" href="{% url 'zayavki:page_view' %}"> > Заявки на уценку > {{ name_page }} </a>
+    <a class="navbar-brand flex-grow-1" href="{% url 'zayavki:zayavki_list' %}"> > Заявки на уценку > {{ name_page }} </a>
 {% endblock name_app %}
 
 
 {% block content %}
-<a href="{% url 'zayavki:page_view' %}" class="btn btn-primary mt-1 mb-3">Вернуться к списку</a>
+<a href="{% url 'zayavki:zayavki_list' %}" class="btn btn-primary mt-1 mb-3">Вернуться к списку</a>
 {% if zayavka.user == user %}    
     
     <h2 class="px-2">Просмотр заявки</h2>
