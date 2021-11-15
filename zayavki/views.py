@@ -51,17 +51,40 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Просмотр заявки"
         context["name_page"] = "Просмотр заявки"
-        context["access_open"] = self.is_access_open()        
-        context["status_as_text"] = self.get_status_as_text()        
-        context["can_be_edited"] = self.is_can_be_edited()        
-        context["can_be_approved"] = self.is_can_be_approved()        
-        context["can_be_discounted_in_1C"] = self.is_can_be_discounted_in_1C()        
-        context["can_be_discounted_in_shop"] = self.is_can_be_discounted_in_shop()        
-        context["can_be_sent_to_archive"] = self.is_can_be_sent_to_archive()        
-        context["can_be_restored"] = self.is_can_be_restored()        
-        context["can_be_cancel_approved"] = self.is_can_be_cancel_approved()        
-        context["can_be_cancel_discounted_in_1C"] = self.is_can_be_cancel_discounted_in_1C()        
-        context["can_be_cancel_discounted_in_shop"] = self.is_can_be_cancel_discounted_in_shop()        
+        context["access_open"] = self.is_access_open()       
+        for_btn = [] 
+        context["status_as_text"] = self.get_status_as_text()   
+        if  self.is_can_be_edited():
+            for_btn.append({"btn_class": "btn-primary", "btn_value":"Редактировать заявку", "btn_name":""})   
+        if  self.is_can_be_approved():
+            for_btn.append({"btn_class": "btn-success", "btn_value":"Заявку одобряю, новая цена назначена", "btn_name":""}) 
+            for_btn.append({"btn_class": "btn-danger", "btn_value":"Отклонить заявку", "btn_name":""}) 
+        if  self.is_can_be_cancel_approved():
+            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отменить решение", "btn_name":""})     
+        if  self.is_can_be_discounted_in_1C():
+            for_btn.append({"btn_class": "btn-success", "btn_value":"Уценка в 1С произведена", "btn_name":""}) 
+        if  self.is_can_be_cancel_discounted_in_1C():
+            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отменить уценку в 1С", "btn_name":""})    
+        if  self.is_can_be_discounted_in_shop():
+            for_btn.append({"btn_class": "btn-success", "btn_value":"Товар на витрине уценен", "btn_name":""}) 
+        if  self.is_can_be_cancel_discounted_in_shop():
+            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отменить уценку на витрине", "btn_name":""})     
+        if  self.is_can_be_sent_to_archive():
+            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отправить в архив", "btn_name":""}) 
+        if  self.is_can_be_restored():
+            for_btn.append({"btn_class": "btn-warning", "btn_value":"Восстановить из архива", "btn_name":""})   
+        context['btns'] = for_btn 
+            
+                                                 
+        # context["can_be_edited"] = self.is_can_be_edited()        
+        # context["can_be_approved"] = self.is_can_be_approved()        
+        # context["can_be_discounted_in_1C"] = self.is_can_be_discounted_in_1C()        
+        # context["can_be_discounted_in_shop"] = self.is_can_be_discounted_in_shop()        
+        # context["can_be_sent_to_archive"] = self.is_can_be_sent_to_archive()        
+        # context["can_be_restored"] = self.is_can_be_restored()        
+        # context["can_be_cancel_approved"] = self.is_can_be_cancel_approved()        
+        # context["can_be_cancel_discounted_in_1C"] = self.is_can_be_cancel_discounted_in_1C()        
+        # context["can_be_cancel_discounted_in_shop"] = self.is_can_be_cancel_discounted_in_shop()        
         return context
     
     def is_access_open(self):

@@ -32,6 +32,14 @@
         <p> Пояснения: {{ zayavka.clarification }}</p>
         <p> Статус: {{ status_as_text }}</p>
         
+        <form action="/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="name" value="Vasya">
+            {% for btn in btns  %}                
+                <input  type="submit" class="btn {{btn.btn_class}} mt-2" value="{{btn.btn_value}}" name="{{btn.btn_name}}">           
+            {% endfor %}
+        </form> 
+
         {% if can_be_edited %}
         <a href="{% url 'zayavki:zayavka-update' zayavka.id %}" 
             class="btn btn-primary mt-2"> Редактировать заявку </a>
