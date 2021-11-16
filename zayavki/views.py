@@ -41,50 +41,87 @@ class ZayavkaCreate(LoginRequiredMixin, CreateView):
         # Перенаправить после успешного создания заявки
         return reverse('zayavki:zayavki_list')
 
+def process_command(request):
+    """ Обработка нажатий кнопок в заявке"""
+    if request.method=="POST":
+        _id = request.POST['_id']
+        if '_edit' in request.POST:
+            print ("Кнопка редактировать заявку ", _id)
+            return HttpResponseRedirect(reverse('zayavki:zayavka-update', args=(_id,)))
+        if '_status1' in request.POST:
+            print ("Кнопка согласовано ", _id)
+            zayavka = Zayavka.objects.get(id=_id)
+            zayavka.status1 = True
+            zayavka.status2 = False
+            zayavka.save()
+            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
+        if '_status2' in request.POST:
+            print ("Кнопка отклонить ", _id)
+            zayavka = Zayavka.objects.get(id=_id)            
+            zayavka.status1 = False
+            zayavka.status2 = True
+            zayavka.save()
+            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
+        if '_cancel_approve' in request.POST:
+            print ("Кнопка отменить решение ", _id)
+            zayavka = Zayavka.objects.get(id=_id)            
+            zayavka.status1 = False
+            zayavka.status2 = False
+            zayavka.save()
+            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
+        if '_status3' in request.POST:
+            print ("Кнопка уценка в 1с ", _id)
+            zayavka = Zayavka.objects.get(id=_id)
+            zayavka.status3 = not zayavka.status3
+            zayavka.save()
+            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
+        if '_status4' in request.POST:
+            print ("Кнопка уценка в магазине ", _id)
+            zayavka = Zayavka.objects.get(id=_id)
+            zayavka.status4 = not zayavka.status4
+            zayavka.save()
+            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
+        if '_status5' in request.POST:
+            print ("Кнопка архив ", _id)
+            zayavka = Zayavka.objects.get(id=_id)
+            zayavka.status5 = not zayavka.status5
+            zayavka.save()
+            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
 
 class ZayavkaDetail(LoginRequiredMixin, DetailView):
     model = Zayavka
     template_name = "zayavki/zayavka_detail.html"
 
+     
     def get_context_data(self, **kwargs):
         # Добавить данные в контекст, передаваемый в шаблон
         context = super().get_context_data(**kwargs)
         context["title"] = "Просмотр заявки"
         context["name_page"] = "Просмотр заявки"
-        context["access_open"] = self.is_access_open()       
-        for_btn = [] 
+        context["access_open"] = self.is_access_open()         
         context["status_as_text"] = self.get_status_as_text()   
+        for_btn = [] 
         if  self.is_can_be_edited():
-            for_btn.append({"btn_class": "btn-primary", "btn_value":"Редактировать заявку", "btn_name":""})   
+            for_btn.append({"btn_class": "btn-primary", "btn_value":"Редактировать заявку", "btn_name":"_edit"})   
         if  self.is_can_be_approved():
-            for_btn.append({"btn_class": "btn-success", "btn_value":"Заявку одобряю, новая цена назначена", "btn_name":""}) 
-            for_btn.append({"btn_class": "btn-danger", "btn_value":"Отклонить заявку", "btn_name":""}) 
+            for_btn.append({"btn_class": "btn-success", "btn_value":"Заявку одобряю, новая цена назначена", "btn_name":"_status1"}) 
+            for_btn.append({"btn_class": "btn-danger", "btn_value":"Отклонить заявку", "btn_name":"_status2"}) 
         if  self.is_can_be_cancel_approved():
-            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отменить решение", "btn_name":""})     
+            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отменить решение", "btn_name":"_cancel_approve"})     
         if  self.is_can_be_discounted_in_1C():
-            for_btn.append({"btn_class": "btn-success", "btn_value":"Уценка в 1С произведена", "btn_name":""}) 
+            for_btn.append({"btn_class": "btn-success", "btn_value":"Уценка в 1С произведена", "btn_name":"_status3"}) 
         if  self.is_can_be_cancel_discounted_in_1C():
-            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отменить уценку в 1С", "btn_name":""})    
+            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отменить уценку в 1С", "btn_name":"_status3"})    
         if  self.is_can_be_discounted_in_shop():
-            for_btn.append({"btn_class": "btn-success", "btn_value":"Товар на витрине уценен", "btn_name":""}) 
+            for_btn.append({"btn_class": "btn-success", "btn_value":"Товар на витрине уценен", "btn_name":"_status4"}) 
         if  self.is_can_be_cancel_discounted_in_shop():
-            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отменить уценку на витрине", "btn_name":""})     
+            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отменить уценку на витрине", "btn_name":"_status4"})     
         if  self.is_can_be_sent_to_archive():
-            for_btn.append({"btn_class": "btn-warning", "btn_value":"Отправить в архив", "btn_name":""}) 
+            for_btn.append({"btn_class": "btn-secondary", "btn_value":"Отправить в архив", "btn_name":"_status5"}) 
         if  self.is_can_be_restored():
-            for_btn.append({"btn_class": "btn-warning", "btn_value":"Восстановить из архива", "btn_name":""})   
+            for_btn.append({"btn_class": "btn-secondary", "btn_value":"Восстановить из архива", "btn_name":"_status5"})   
         context['btns'] = for_btn 
-            
-                                                 
-        # context["can_be_edited"] = self.is_can_be_edited()        
-        # context["can_be_approved"] = self.is_can_be_approved()        
-        # context["can_be_discounted_in_1C"] = self.is_can_be_discounted_in_1C()        
-        # context["can_be_discounted_in_shop"] = self.is_can_be_discounted_in_shop()        
-        # context["can_be_sent_to_archive"] = self.is_can_be_sent_to_archive()        
-        # context["can_be_restored"] = self.is_can_be_restored()        
-        # context["can_be_cancel_approved"] = self.is_can_be_cancel_approved()        
-        # context["can_be_cancel_discounted_in_1C"] = self.is_can_be_cancel_discounted_in_1C()        
-        # context["can_be_cancel_discounted_in_shop"] = self.is_can_be_cancel_discounted_in_shop()        
+     
         return context
     
     def is_access_open(self):

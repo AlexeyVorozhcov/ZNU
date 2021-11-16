@@ -32,14 +32,14 @@
         <p> Пояснения: {{ zayavka.clarification }}</p>
         <p> Статус: {{ status_as_text }}</p>
         
-        <form action="/" method="post">
+        <form action="{% url 'zayavki:zayavka-command' %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="name" value="Vasya">
+            <input type="hidden" name="_id" value="{{zayavka.id}}">
             {% for btn in btns  %}                
                 <input  type="submit" class="btn {{btn.btn_class}} mt-2" value="{{btn.btn_value}}" name="{{btn.btn_name}}">           
             {% endfor %}
         </form> 
-
+{% comment %} 
         {% if can_be_edited %}
         <a href="{% url 'zayavki:zayavka-update' zayavka.id %}" 
             class="btn btn-primary mt-2"> Редактировать заявку </a>
@@ -89,7 +89,7 @@
         {% if can_be_restored %}
             <a href="#" 
             class="btn btn-warning mx-2 mt-2"> Восстановить </a>
-        {% endif %}
+        {% endif %} {% endcomment %}
 
         
 
