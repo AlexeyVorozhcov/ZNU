@@ -38,8 +38,9 @@ class ZayavkaCreate(LoginRequiredMixin, CreateView):
         return context
 
     def get_success_url(self):
-        # Перенаправить после успешного создания заявки
+        # Перенаправить после успешного создания заявки. TODO заменить на reverse_lazy, переадресацию на созданную заявку detail
         return reverse('zayavki:zayavki_list')
+
 
 def process_command(request):
     """ Обработка нажатий кнопок в заявке"""
@@ -87,6 +88,7 @@ def process_command(request):
             zayavka.status5 = not zayavka.status5
             zayavka.save()
             return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
+
 
 class ZayavkaDetail(LoginRequiredMixin, DetailView):
     model = Zayavka
@@ -215,7 +217,6 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
         else: 
             return False      
                   
-              
 
 class ZayavkaUpdate(LoginRequiredMixin, UpdateView):
     model = Zayavka
