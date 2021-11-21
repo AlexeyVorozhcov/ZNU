@@ -46,49 +46,26 @@ def process_command(request):
     """ Обработка нажатий кнопок в заявке"""
     if request.method=="POST":
         _id = request.POST['_id']
+        zayavka = Zayavka.objects.get(id=_id)
         if '_edit' in request.POST:
-            print ("Кнопка редактировать заявку ", _id)
             return HttpResponseRedirect(reverse('zayavki:zayavka-update', args=(_id,)))
         if '_status1' in request.POST:
-            print ("Кнопка согласовано ", _id)
-            zayavka = Zayavka.objects.get(id=_id)
             zayavka.status1 = True
-            zayavka.status2 = False
-            zayavka.save()
-            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
-        if '_status2' in request.POST:
-            print ("Кнопка отклонить ", _id)
-            zayavka = Zayavka.objects.get(id=_id)            
+            zayavka.status2 = False            
+        if '_status2' in request.POST:        
             zayavka.status1 = False
             zayavka.status2 = True
-            zayavka.save()
-            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
-        if '_cancel_approve' in request.POST:
-            print ("Кнопка отменить решение ", _id)
-            zayavka = Zayavka.objects.get(id=_id)            
+        if '_cancel_approve' in request.POST:        
             zayavka.status1 = False
             zayavka.status2 = False
-            zayavka.save()
-            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
         if '_status3' in request.POST:
-            print ("Кнопка уценка в 1с ", _id)
-            zayavka = Zayavka.objects.get(id=_id)
             zayavka.status3 = not zayavka.status3
-            zayavka.save()
-            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
         if '_status4' in request.POST:
-            print ("Кнопка уценка в магазине ", _id)
-            zayavka = Zayavka.objects.get(id=_id)
             zayavka.status4 = not zayavka.status4
-            zayavka.save()
-            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
         if '_status5' in request.POST:
-            print ("Кнопка архив ", _id)
-            zayavka = Zayavka.objects.get(id=_id)
             zayavka.status5 = not zayavka.status5
-            zayavka.save()
-            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
-
+        zayavka.save()
+        return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
 
 class ZayavkaDetail(LoginRequiredMixin, DetailView):
     model = Zayavka
@@ -243,6 +220,13 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
         return context
     
     def get_default_filter(self):
+        """Получить текущий фильтр по умолчанию, который зависит от роли пользователя
+        
+        Если пользователь=Магазин - фильтр по умолчанию "Ждут уценки на витрине" 
+        Если пользователь=Менеджер - фильтр по умолчанию "Ждут рассмотрения"
+        Returns:
+            [str]: [значение одного из ключей словаря DICT_OF_FILTERS]
+        """        
         # получить фильтр по умолчанию, который зависит от роли пользователя
         if self.request.user.role.namerole == "Магазин":
             return DICT_OF_FILTERS["Ждут уценки на витрине"]
@@ -252,19 +236,38 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
             return DICT_OF_FILTERS["Все активные"]
         
     def get_post_filter(self):
-        # получить фильтр из post
+        """Получает параметр "filter" из полученного POST
+
+        Returns:
+            [str]: [значение в переданном параметре "filter" либо значение по умолчанию, полученное из метода self.get_default_filter]
+        """        
         return self.kwargs.get('filter', self.get_default_filter())
     
     def get_queryset(self):  
-        # получить выборку из таблицы      
+        """Получает данные из БД на основании текущего фильтра заявок и текущего пользователя
+
+        Returns:
+            [QuerySet]: [список записей из базы данных]
+        """        """"""    
         return get_data_from_model_Zayavka(self.get_post_filter(), self.request.user)
 
 
 def get_data_from_model_Zayavka(filter, user):
-    '''
-    Возвращает выборку из таблицы по условиям фильтра. Если пользователь Магазин - выборка записей этого магазина. 
-    Если пользователь Менеджер - выборка тех записей, категория которых есть в списке рабочих категорий менеджера.
-    Далее выборка по статусам в зависимости от фильтра. Сортировка по id
+    """Возвращает выборку из таблицы по условиям фильтра.  
+       
+    Если пользователь=Магазин - выборка записей этого магазина. 
+    Если пользователь=Менеджер - выборка тех записей, категория которых есть в списке рабочих категорий менеджера.
+    Далее выборка по статусам в зависимости от filter. 
+    Сортировка по id
+
+    Args:
+        filter ([str]): [фильтр заявок]
+        user ([AbstractBaseUser]): [пользователь]
+
+    Returns:
+        [QuerySet]: [список записей из базы данных]
+    """    '''
+    
     '''
     result = None  # возвращаемый результат    
     bd_for_user = None # первичная выборка базы для юзера (записи только для конкретного магазина или менеджера)

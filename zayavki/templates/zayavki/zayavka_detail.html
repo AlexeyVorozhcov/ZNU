@@ -34,69 +34,14 @@
         
         <form action="{% url 'zayavki:zayavka-command' %}" method="post">
             {% csrf_token %}
+            {% comment %} в скрытое поле _id записывается текущий id {% endcomment %}
             <input type="hidden" name="_id" value="{{zayavka.id}}">
-            {% for btn in btns  %}                
+            {% for btn in btns  %} 
+                {% comment %} в имя поля записывается команда {% endcomment %}
                 <input  type="submit" class="btn {{btn.btn_class}} mt-2" value="{{btn.btn_value}}" name="{{btn.btn_name}}">           
             {% endfor %}
         </form> 
-{% comment %} 
-        {% if can_be_edited %}
-        <a href="{% url 'zayavki:zayavka-update' zayavka.id %}" 
-            class="btn btn-primary mt-2"> Редактировать заявку </a>
-        {% endif %} 
-
-        {% if can_be_approved %}
-            <a href="# " 
-            class="btn btn-success mt-2"> Заявку одобряю, новая цена назначена </a>
-            <a href="#" 
-            class="btn btn-danger mx-2 mt-2"> Отклонить заявку </a>
-        {% endif %}
-
-        {% if can_be_cancel_approved %}
-            <a href="#" 
-            class="btn btn-warning mx-2 mt-2"> Отменить решение </a>
-        {% endif %}
-
-        {% if can_be_discounted_in_1C %}
-            <a href="# " 
-            class="btn btn-success mt-2"> Уценка в 1С произведена </a>
-            <a href="#" 
-            class="btn btn-danger mx-2 mt-2"> В архив </a>
-        {% endif %}
-
-        {% if can_be_cancel_discounted_in_1C %}
-            <a href="#" 
-            class="btn btn-warning mx-2 mt-2"> Отменить уценку в 1С </a>
-        {% endif %}
-
-        {% if can_be_discounted_in_shop %}
-            <a href="# " 
-            class="btn btn-success mt-2"> Товар на витрине уценен </a>
-            <a href="#" 
-            class="btn btn-danger mx-2 mt-2"> В архив </a>            
-        {% endif %}
-
-        {% if can_be_cancel_discounted_in_shop %}
-            <a href="#" 
-            class="btn btn-warning mx-2 mt-2"> Отменить уценку в магазине </a>
-        {% endif %}
-
-        {% if can_be_sent_to_archive %}
-            <a href="#" 
-            class="btn btn-warning mx-2 mt-2"> Отправить в архив </a>
-        {% endif %}
-
-        {% if can_be_restored %}
-            <a href="#" 
-            class="btn btn-warning mx-2 mt-2"> Восстановить </a>
-        {% endif %} {% endcomment %}
-
-        
-
-        
-        
     {% else %}
-        <p> Данная заявка вам недоступна! </p>
-    
+        <p> Данная заявка вам недоступна! </p>    
     {% endif %}              
 {% endblock content %}
