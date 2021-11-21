@@ -6,6 +6,7 @@ from django.shortcuts import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import UpdateView, DetailView, CreateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from comments.models import Comments
 
 
 KOL_RECORDS_ON_PAGE = 8
@@ -100,9 +101,14 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
         if  self.is_can_be_restored():
             for_btn.append({"btn_class": "btn-secondary", "btn_value":"Восстановить из архива", "btn_name":"_status5"})   
         context['btns'] = for_btn 
+        context['comments'] = self.get_comments()
      
         return context
-    
+    def get_comments(self):
+        zayavka = self.get_object()
+        return Comments.objects.filter(object_id=zayavka.id)
+        
+        
     def is_access_open(self):
         # открывать или нет заявку текущему пользователю
         if self.get_object().user.shop == self.request.user.shop or self.request.user.role.namerole[:3] == "Мен":

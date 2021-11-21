@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'zayavki',
     'main_page',
     'users',
+    'comments'
 ]
 
 MIDDLEWARE = [

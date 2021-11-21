@@ -41,6 +41,9 @@
                 <input  type="submit" class="btn {{btn.btn_class}} mt-2" value="{{btn.btn_value}}" name="{{btn.btn_name}}">           
             {% endfor %}
         </form> 
+
+        {% include "zayavki/comments.html" %}
+
     {% else %}
         <p> Данная заявка вам недоступна! </p>    
     {% endif %}              

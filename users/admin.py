@@ -10,7 +10,7 @@ admin.site.register(Category)
 
 @admin.register(User)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("username","role", "shop", "email")
+    list_display = ("id", "username","role", "shop", "email")
 
 
 
