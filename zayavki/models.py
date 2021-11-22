@@ -1,13 +1,36 @@
 from django.db import models
 from users.models import User, Category, Shops
 from django.urls import reverse
+from comments.models import Comments
 
 
 # Create your models here.
 
+DICT_OF_FILTERS = {
+    "Все активные": "all",
+    "Ждут рассмотрения": "resh",
+    "Ждут уценки в 1С": "utc",
+    "Ждут уценки на витрине": "utc_inshop",
+    "Уцененные" : "ok_utc_inshop",
+    "Отклоненные": "otkl",
+    "Архивные": "arch"}
 
+class Filters(models.Model):
+    label = models.CharField(max_length=30)
+    link = models.CharField(max_length=10)
+    status1 = models.BooleanField(default=False)  # одобрено
+    status2 = models.BooleanField(default=False)  # отклонено
+    status3 = models.BooleanField(default=False)  # уценено
+    status4 = models.BooleanField(default=False)  # ценник сменен
+    status5 = models.BooleanField(default=False)  # в архиве
+    status6 = models.BooleanField(default=False)    # остальные поля - резервные
+    
+    class Meta:
+        verbose_name_plural = "Фильтры заявок"
+        verbose_name = "Фильтр заявок"
 
-
+    def __str__(self) -> str:
+        return self.label
 
 class Zayavka(models.Model):
     user = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
@@ -28,6 +51,7 @@ class Zayavka(models.Model):
     status6 = models.BooleanField(default=False)    # остальные поля - резервные
     
     clarification_of_manager = models.CharField(max_length=150, blank=True)
+    # filter_default = models.ForeignKey(Filters, default=None, null=True, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name_plural = "Заявки"
@@ -39,4 +63,8 @@ class Zayavka(models.Model):
     def get_absolute_url(self):
         return f'/zayavki/{self.id}'
         # TODO вернуть на страницу заявки detail
+    
+    def get_count_comments(self):
+        return Comments.objects.filter(object_id=self.id).count()
+    
     

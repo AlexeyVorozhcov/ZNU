@@ -74,9 +74,11 @@
                         {% endif %}                    
                     </td>
                     <td>{{zayavka.clarification}} 
-                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}"  target="_blank" class="text-decoration-none">
-                                <i class="fa fa-comment" aria-hidden="true"></i>
-                            </a>                        
+                        {% if zayavka.get_count_comments > 0 %}
+                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}" class="text-decoration-none">
+                           <i class="fa fa-comment-o" aria-hidden="true"></i> {{ zayavka.get_count_comments }}
+                        </a> 
+                        {% endif %}                       
                     </td>
                     <td>{% if zayavka.status1 %}
                             <i class="fa fa-check" style="color:green" aria-hidden="true"></i>

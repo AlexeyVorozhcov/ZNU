@@ -8,17 +8,11 @@ from django.views.generic import UpdateView, DetailView, CreateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from comments.models import Comments
 from comments.forms import CommentForm
+from zayavki.models import DICT_OF_FILTERS
 
 
 KOL_RECORDS_ON_PAGE = 8
-DICT_OF_FILTERS = {
-    "Все активные": "all",
-    "Ждут рассмотрения": "resh",
-    "Ждут уценки в 1С": "utc",
-    "Ждут уценки на витрине": "utc_inshop",
-    "Уцененные" : "ok_utc_inshop",
-    "Отклоненные": "otkl",
-    "Архивные": "arch"}
+
 
 
 class ZayavkaCreate(LoginRequiredMixin, CreateView):
@@ -218,14 +212,14 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
     paginate_by = KOL_RECORDS_ON_PAGE
     template_name = "zayavki/zayavka_list.html"
     context_object_name = "zayavki"
-
+    
     def get_context_data(self, **kwargs):
         # заполняем контекст для передачи в шаблон
         context = super().get_context_data(**kwargs)
         context["title"] = "Заявки на уценку"
         context["name_page"] = "Заявки на уценку"
         context['filters'] = DICT_OF_FILTERS
-        context['cur_filter'] = self.get_post_filter()
+        context['cur_filter'] = self.get_post_filter()        
         return context
     
     def get_default_filter(self):
@@ -259,7 +253,7 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
             [QuerySet]: [список записей из базы данных]
         """        """"""    
         return get_data_from_model_Zayavka(self.get_post_filter(), self.request.user)
-
+    
 
 def get_data_from_model_Zayavka(filter, user):
     """Возвращает выборку из таблицы по условиям фильтра.  
