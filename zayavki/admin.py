@@ -1,6 +1,6 @@
 from django.contrib import admin
-from zayavki.models import Zayavka, Filters
-from django.db import models
+from zayavki.models import Zayavka
+# from django.db import models
 
 # Register your models here.
 
@@ -15,6 +15,6 @@ class ProductAdmin(admin.ModelAdmin):
     "clarification_of_manager")
     
 
-@admin.register(Filters)
-class FiltersAdmin(admin.ModelAdmin):
-    list_display = ("id", "label","link", "status1", "status2", "status3", "status4", "status5", "status6")    
+# @admin.register(Filters)
+# class FiltersAdmin(admin.ModelAdmin):
+#     list_display = ("id", "label","link", "status1", "status2", "status3", "status4", "status5", "status6")    
