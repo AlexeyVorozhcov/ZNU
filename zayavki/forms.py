@@ -50,10 +50,10 @@ class AddZayavkaForm(forms.ModelForm):
         model = Zayavka
         fields = ("code", "name", "category","description", "clarification", "foto1", "foto2")    
 
-    def set_user(self, new_user):
-        data = self.data.copy()
-        data['user'] = new_user
-        self.data = data
+    # def set_user(self, new_user):
+    #     data = self.data.copy()
+    #     data['user'] = new_user
+    #     self.data = data
            
         
     

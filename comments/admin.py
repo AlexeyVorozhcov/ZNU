@@ -5,5 +5,5 @@ from .models import Comments
 
 @admin.register(Comments)
 class CommentsAdmin(admin.ModelAdmin):
-    list_display = ("object_id","created", "autor_id", "body")
+    list_display = ("object_id","created", "autor", "body")
     

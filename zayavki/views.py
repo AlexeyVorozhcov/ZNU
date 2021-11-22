@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views.generic import UpdateView, DetailView, CreateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from comments.models import Comments
+from comments.forms import CommentForm
 
 
 KOL_RECORDS_ON_PAGE = 8
@@ -102,11 +103,13 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
             for_btn.append({"btn_class": "btn-secondary", "btn_value":"Восстановить из архива", "btn_name":"_status5"})   
         context['btns'] = for_btn 
         context['comments'] = self.get_comments()
+        context['comments_form'] = CommentForm
      
         return context
+    
     def get_comments(self):
         zayavka = self.get_object()
-        return Comments.objects.filter(object_id=zayavka.id)
+        return Comments.objects.filter(object_id=zayavka.id).order_by("created")
         
         
     def is_access_open(self):

@@ -4,7 +4,7 @@ from django.db import models
 class Comments(models.Model):
     object_id = models.PositiveSmallIntegerField()  # id объекта, к которому будут относиться комментарии, например, Заявки
     created = models.DateTimeField(auto_now_add=True) # дата и время создания комментария
-    autor_id =models.PositiveSmallIntegerField() # id пользователя, который является автором комментария
+    autor =models.CharField(max_length=50) # id пользователя, который является автором комментария
     body = models.TextField() # текст комментария
     active = models.BooleanField(default=True) # для отключения неприемлемых комментариев
 

@@ -14,4 +14,5 @@ urlpatterns = [
     path("command", process_command, name="zayavka-command"),
     
     
+    
 ]

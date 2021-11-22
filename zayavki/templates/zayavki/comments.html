@@ -1,1 +1,20 @@
-Тут будут комментарии
+<br>
+<br>
+Комментарии
+{% for comment in comments%}
+    <p> {{comment.created}} : {{ comment.autor }}: {{ comment.body}}
+{% endfor %}
+
+<br>
+<br>
+Добавить комментарий:
+<form action="{% url 'comments:add-comment' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="_id" value="{{zayavka.id}}">
+    <div class="col-md-6 col-sm-12">
+        <label class="form-label mb-0 mt-1 " for={{comments_form.body.id_for_input}}>Текст комментария:</label>
+        {{ comments_form.body}}
+     </div>  
+    <input class="col-md-3 col-sm-12 btn btn-info btn-block mt-2 " type="submit" value="Отправить" >
+</form>        
+
