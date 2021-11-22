@@ -73,7 +73,11 @@
                             </a>
                         {% endif %}                    
                     </td>
-                    <td>{{zayavka.clarification}}</td>
+                    <td>{{zayavka.clarification}} 
+                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}"  target="_blank" class="text-decoration-none">
+                                <i class="fa fa-comment" aria-hidden="true"></i>
+                            </a>                        
+                    </td>
                     <td>{% if zayavka.status1 %}
                             <i class="fa fa-check" style="color:green" aria-hidden="true"></i>
                         {% elif zayavka.status2 %}

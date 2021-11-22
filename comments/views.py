@@ -8,15 +8,19 @@ from django.urls import reverse
 
 def add_comment(request):
     """ Обработка добавления комментария """
-    print ("Я зашел в метод")
-    _id = int(request.POST['_id'])
-    print ("ID заявки: ", _id)
+       
     if request.method=="POST":
-        print ("Я зашел в пост")
+        if request.POST['_id']: _id = int(request.POST['_id'])
+        else: _id = 0    
         form = CommentForm(data=request.POST)
         if form.is_valid():
-            print ("Я зашел в валид")
-            form.autor = request.user
-            form.object_id = _id
-            form.save()            
+            comment = form.save(commit=False)
+            comment.autor = request.user
+            comment.object_id = _id  
+            comment.save()            
             return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
+        else:
+            print ("Что-то пошлдо не так.")
+            print (form.data)
+    else:
+        return HttpResponseRedirect(reverse('zayavki:zayavki_list'))        
