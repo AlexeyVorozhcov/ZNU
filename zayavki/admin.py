@@ -17,4 +17,4 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Filters)
 class FiltersAdmin(admin.ModelAdmin):
-    list_display = ("id", "label","link", "status1", "status2", "status3", "status4", "status5", "status6",)    
+    list_display = ("id", "label","link", "status1", "status2", "status3", "status4", "status5", "status6")    

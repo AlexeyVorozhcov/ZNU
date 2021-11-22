@@ -24,12 +24,13 @@ class Filters(models.Model):
     status4 = models.BooleanField(default=False)  # ценник сменен
     status5 = models.BooleanField(default=False)  # в архиве
     status6 = models.BooleanField(default=False)    # остальные поля - резервные
+    is_default_for_users = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
     
     class Meta:
         verbose_name_plural = "Фильтры заявок"
         verbose_name = "Фильтр заявок"
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.label
 
 class Zayavka(models.Model):
@@ -51,7 +52,7 @@ class Zayavka(models.Model):
     status6 = models.BooleanField(default=False)    # остальные поля - резервные
     
     clarification_of_manager = models.CharField(max_length=150, blank=True)
-    # filter_default = models.ForeignKey(Filters, default=None, null=True, on_delete=models.PROTECT)
+    
 
     class Meta:
         verbose_name_plural = "Заявки"
