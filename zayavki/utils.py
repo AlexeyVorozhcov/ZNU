@@ -34,5 +34,5 @@ def get_data_from_model_Zayavka(filter_link, user):
         status4__in=[True,False] if current_filter.status4==None else [current_filter.status4],
         status5__in=[True,False] if current_filter.status5==None else [current_filter.status5],
         status6__in=[True,False] if current_filter.status6==None else [current_filter.status6]
-    )
+    ).order_by("-id")
     return result
