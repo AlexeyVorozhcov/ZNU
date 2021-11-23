@@ -23,12 +23,12 @@
       
         {% comment %} БЛОК ФИЛЬТРОВ {% endcomment %}
         <div class="select_filter">
-            {% for name_filter, param_filter in filters.items %}
+            {% for one_filter in filters %}
                 <div>
-                    {% if cur_filter != param_filter  %} 
-                        <a class="btn btn-outline-primary btn-sm text-nowrap" href="{% url 'zayavki:zayavki_filter_list' param_filter%}" role="button">{{ name_filter }}</a>
+                    {% if one_filter.link != cur_filter %} 
+                        <a class="btn btn-outline-primary btn-sm text-nowrap" href="{% url 'zayavki:zayavki_filter_list' one_filter.link %}" role="button">{{ one_filter.label }}</a>
                     {% else %}
-                        <a class="btn btn-primary btn-sm text-nowrap" href="{% url 'zayavki:zayavki_filter_list' param_filter%}" role="button">{{ name_filter }}</a>
+                        <a class="btn btn-primary btn-sm text-nowrap" href="{% url 'zayavki:zayavki_filter_list' one_filter.link %}" role="button">{{ one_filter.label }}</a>
                     {% endif %}
                 </div>    
             {% endfor %}            

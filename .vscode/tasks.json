@@ -8,6 +8,18 @@
             "type": "shell",
             "command": "python manage.py runserver",
             "problemMatcher": []
+        },
+        {
+            "label": "makemigrations",
+            "type": "shell",
+            "command": "python manage.py makemigrations",
+            "problemMatcher": []
+        },
+        {
+            "label": "migrate",
+            "type": "shell",
+            "command": "python manage.py migrate",
+            "problemMatcher": []
         }
     ]
 }

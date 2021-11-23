@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+# from zayavki.models import FiltersOfZayavok
 
 # Create your models here.
 
@@ -29,6 +29,7 @@ class Category(models.Model):
 class Roles(models.Model):
     namerole = models.CharField(max_length=30)
     work_category = models.ManyToManyField(Category, default=None, blank=True) 
+    # default_filter = models.ForeignKey(FiltersOfZayavok, on_delete=models.PROTECT, null=True, default=None, blank=True) 
     class Meta:
         verbose_name_plural = "Роли"
         verbose_name = "Роль"

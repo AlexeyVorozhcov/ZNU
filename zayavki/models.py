@@ -15,23 +15,23 @@ DICT_OF_FILTERS = {
     "Отклоненные": "otkl",
     "Архивные": "arch"}
 
-# class Filters(models.Model):
-#     label = models.CharField(max_length=30)
-#     link = models.CharField(max_length=10)
-#     status1 = models.BooleanField(default=False)  # одобрено
-#     status2 = models.BooleanField(default=False)  # отклонено
-#     status3 = models.BooleanField(default=False)  # уценено
-#     status4 = models.BooleanField(default=False)  # ценник сменен
-#     status5 = models.BooleanField(default=False)  # в архиве
-#     status6 = models.BooleanField(default=False)    # остальные поля - резервные
-#     is_default_for_users = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
+class FiltersOfZayavok(models.Model):
+    label = models.CharField(max_length=30) # Название/отображение на сайте
+    link = models.CharField(max_length=10) # как будет отображаться в ссылке
+    status1 = models.BooleanField(default=None, null=True)  # одобрено
+    status2 = models.BooleanField(default=None, null=True)  # отклонено
+    status3 = models.BooleanField(default=None, null=True)  # уценено
+    status4 = models.BooleanField(default=None, null=True)  # ценник сменен
+    status5 = models.BooleanField(default=None, null=True)  # в архиве
+    status6 = models.BooleanField(default=None, null=True)    # остальные поля - резервные
+    # is_default_for_users = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
     
-#     class Meta:
-#         verbose_name_plural = "Фильтры заявок"
-#         verbose_name = "Фильтр заявок"
+    class Meta:
+        verbose_name_plural = "Фильтры заявок"
+        verbose_name = "Фильтр заявок"
 
-#     def __str__(self):
-#         return self.label
+    def __str__(self):
+        return self.label
 
 class Zayavka(models.Model):
     user = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)

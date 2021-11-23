@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from zayavki.models import Zayavka
+from zayavki.models import Zayavka, FiltersOfZayavok
 from zayavki.forms import AddZayavkaForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponseRedirect
@@ -8,7 +8,8 @@ from django.views.generic import UpdateView, DetailView, CreateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from comments.models import Comments
 from comments.forms import CommentForm
-from zayavki.models import DICT_OF_FILTERS
+from .utils import get_data_from_model_Zayavka
+
 
 
 KOL_RECORDS_ON_PAGE = 8
@@ -219,7 +220,7 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Заявки на уценку"
         context["name_page"] = "Заявки на уценку"
-        context['filters'] = DICT_OF_FILTERS
+        context['filters'] = FiltersOfZayavok.objects.all()
         context['cur_filter'] = self.get_post_filter()        
         return context
     
@@ -232,12 +233,13 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
             [str]: [значение одного из ключей словаря DICT_OF_FILTERS]
         """        
         # получить фильтр по умолчанию, который зависит от роли пользователя
-        if self.request.user.role.namerole == "Магазин":
-            return DICT_OF_FILTERS["Ждут уценки на витрине"]
-        elif self.request.user.role.namerole[:3] == "Мен":
-            return DICT_OF_FILTERS["Ждут рассмотрения"]
-        else:
-            return DICT_OF_FILTERS["Все активные"]
+        # if self.request.user.role.namerole == "Магазин":
+        #     return DICT_OF_FILTERS["Ждут уценки на витрине"]
+        # elif self.request.user.role.namerole[:3] == "Мен":
+        #     return DICT_OF_FILTERS["Ждут рассмотрения"]
+        # else:
+        #     return DICT_OF_FILTERS["Все активные"]
+        return FiltersOfZayavok.objects.get(id=1).link
         
     def get_post_filter(self):
         """Получает параметр "filter" из полученного POST
@@ -256,54 +258,6 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
         return get_data_from_model_Zayavka(self.get_post_filter(), self.request.user)
     
 
-def get_data_from_model_Zayavka(filter, user):
-    """Возвращает выборку из таблицы по условиям фильтра.  
-       
-    Если пользователь=Магазин - выборка записей этого магазина. 
-    Если пользователь=Менеджер - выборка тех записей, категория которых есть в списке рабочих категорий менеджера.
-    Далее выборка по статусам в зависимости от filter. 
-    Сортировка по id
 
-    Args:
-        filter ([str]): [фильтр заявок]
-        user ([AbstractBaseUser]): [пользователь]
-
-    Returns:
-        [QuerySet]: [список записей из базы данных]
-    """    '''
-    
-    '''
-    result = None  # возвращаемый результат    
-    bd_for_user = None # первичная выборка базы для юзера (записи только для конкретного магазина или менеджера)
-    # если Магазин, то отбираются все заявки с этим магазином
-    if user.role.namerole == "Магазин":
-        bd_for_user = Zayavka.objects.filter(user__shop=user.shop).order_by("-id")
-    else:
-        bd_for_user = Zayavka.objects.filter(category__in=user.role.work_category.all()).order_by("-id")
-
-    arch = bd_for_user.filter(status5=True)  # архивные
-    all_z = bd_for_user.filter(status5=False)  # все кроме архивных
-    resh = all_z.filter(status1=False, status2=False)  # ожидающие решения
-    ok_resh = all_z.filter(status1=True)  # одобренные
-    not_resh = all_z.filter(status2=True)  # отклоненные
-    utc = ok_resh.filter(status3=False)  # ожидающие уценки в 1С
-    ok_utc = ok_resh.filter(status3=True)  # уцененные в 1С
-    utc_inshop = ok_utc.filter(status4=False)  # ожидающие уценки в магазине
-    ok_utc_inshop = ok_utc.filter(status4=True)  # уцененные в магазине
-    if not filter or filter == DICT_OF_FILTERS["Все активные"]:
-        result = all_z
-    if filter == DICT_OF_FILTERS["Ждут рассмотрения"]:
-        result = resh
-    if filter == DICT_OF_FILTERS["Архивные"]:
-        result = arch
-    if filter == DICT_OF_FILTERS["Отклоненные"]:
-        result = not_resh
-    if filter == DICT_OF_FILTERS["Ждут уценки в 1С"]:
-        result = utc
-    if filter == DICT_OF_FILTERS["Ждут уценки на витрине"]:
-        result = utc_inshop
-    if filter == DICT_OF_FILTERS["Уцененные"]:
-        result = ok_utc_inshop   
-    return result
 
 
