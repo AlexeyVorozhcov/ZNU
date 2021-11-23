@@ -77,7 +77,8 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
         context["status_as_text"] = self.get_status_as_text()   
         for_btn = [] 
         if  self.is_can_be_edited():
-            for_btn.append({"btn_class": "btn-primary", "btn_value":"Редактировать заявку", "btn_name":"_edit"})   
+            for_btn.append({"btn_class": "btn-primary", "btn_value":"Редактировать заявку", "btn_name":"_edit"})  
+            for_btn.append({"btn_class": "btn-secondary", "btn_value":"Отправить в архив", "btn_name":"_status5"}) 
         if  self.is_can_be_approved():
             for_btn.append({"btn_class": "btn-success", "btn_value":"Заявку одобряю, новая цена назначена", "btn_name":"_status1"}) 
             for_btn.append({"btn_class": "btn-danger", "btn_value":"Отклонить заявку", "btn_name":"_status2"}) 
@@ -128,7 +129,7 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
     def is_can_be_edited(self):
         # можно ли заявку редактировать
         zayavka = self.get_object()
-        if zayavka.user.shop == self.request.user.shop and not zayavka.status1 and not zayavka.status2:
+        if zayavka.user.shop == self.request.user.shop and not zayavka.status1 and not zayavka.status2 and not zayavka.status5:
             return True
         else:
             return False
@@ -182,7 +183,7 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
             return False      
         
     def is_can_be_sent_to_archive (self):
-        # можно ли уценять в магазине
+        # можно ли отправить в архив
         zayavka = self.get_object()
         if (zayavka.status4 or zayavka.status2) and not zayavka.status5 and (self.request.user.role.namerole == "Магазин" or self.request.user.role.namerole == "Менеджер по уценке"):
             return True
