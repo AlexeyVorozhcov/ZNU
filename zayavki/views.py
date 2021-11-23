@@ -226,20 +226,13 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
     
     def get_default_filter(self):
         """Получить текущий фильтр по умолчанию, который зависит от роли пользователя
-        
-        Если пользователь=Магазин - фильтр по умолчанию "Ждут уценки на витрине" 
-        Если пользователь=Менеджер - фильтр по умолчанию "Ждут рассмотрения"
+                
         Returns:
-            [str]: [значение одного из ключей словаря DICT_OF_FILTERS]
+            [str]: [значение поля link объекта из таблицы FiltersOfZayavok, в котором в поле for_roles есть роль текущего пользователя]
         """        
         # получить фильтр по умолчанию, который зависит от роли пользователя
-        # if self.request.user.role.namerole == "Магазин":
-        #     return DICT_OF_FILTERS["Ждут уценки на витрине"]
-        # elif self.request.user.role.namerole[:3] == "Мен":
-        #     return DICT_OF_FILTERS["Ждут рассмотрения"]
-        # else:
-        #     return DICT_OF_FILTERS["Все активные"]
-        return FiltersOfZayavok.objects.get(id=1).link
+        result = FiltersOfZayavok.objects.get(for_roles=self.request.user.role).link
+        return result
         
     def get_post_filter(self):
         """Получает параметр "filter" из полученного POST

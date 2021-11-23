@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import User, Category, Shops
+from users.models import Roles, User, Category, Shops
 from django.urls import reverse
 from comments.models import Comments
 
@@ -24,7 +24,7 @@ class FiltersOfZayavok(models.Model):
     status4 = models.BooleanField(default=None, null=True)  # ценник сменен
     status5 = models.BooleanField(default=None, null=True)  # в архиве
     status6 = models.BooleanField(default=None, null=True)    # остальные поля - резервные
-    # is_default_for_users = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
+    for_roles = models.ManyToManyField(Roles, default=None, null=True) # для каких ролей пользователя является дефолтным
     
     class Meta:
         verbose_name_plural = "Фильтры заявок"
