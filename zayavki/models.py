@@ -6,15 +6,6 @@ from comments.models import Comments
 
 # Create your models here.
 
-DICT_OF_FILTERS = {
-    "Все активные": "all",
-    "Ждут рассмотрения": "resh",
-    "Ждут уценки в 1С": "utc",
-    "Ждут уценки на витрине": "utc_inshop",
-    "Уцененные" : "ok_utc_inshop",
-    "Отклоненные": "otkl",
-    "Архивные": "arch"}
-
 class FiltersOfZayavok(models.Model):
     label = models.CharField(max_length=30) # Название/отображение на сайте
     link = models.CharField(max_length=10) # как будет отображаться в ссылке
@@ -24,7 +15,7 @@ class FiltersOfZayavok(models.Model):
     status4 = models.BooleanField(default=None, null=True)  # ценник сменен
     status5 = models.BooleanField(default=None, null=True)  # в архиве
     status6 = models.BooleanField(default=None, null=True)    # остальные поля - резервные
-    for_roles = models.ManyToManyField(Roles, default=None, null=True) # для каких ролей пользователя является дефолтным
+    for_roles = models.ManyToManyField(Roles, default=None) # для каких ролей пользователя является дефолтным
     
     class Meta:
         verbose_name_plural = "Фильтры заявок"
