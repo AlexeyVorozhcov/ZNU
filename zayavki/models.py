@@ -55,6 +55,8 @@ class Zayavka(models.Model):
     def get_absolute_url(self):
         return f'/zayavki/{self.id}'
         # TODO вернуть на страницу заявки detail
+        # def get_absolute_url(self):
+        #     return reverse('author-detail', kwargs={'pk': self.pk})
     
     def get_count_comments(self):
         return Comments.objects.filter(object_id=self.id).count()

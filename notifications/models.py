@@ -15,4 +15,10 @@ class Notifications(models.Model):
         verbose_name = "Уведомление"
 
     def __str__(self):
-        return self.label
+        return self.text
+    
+def create_notification(recipient, zayavka, type_):
+    text=""
+    if type=="create":
+        text = f"Магазин {zayavka.user.shop} создал новую заявку на уценку товара {zayavka.name}."
+    Notifications.objects.create(recipient=recipient, zayavka=zayavka, text=text)

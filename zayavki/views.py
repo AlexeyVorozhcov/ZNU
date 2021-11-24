@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from users.models import User
 from zayavki.models import Zayavka, FiltersOfZayavok
 from zayavki.forms import AddZayavkaForm
 from django.contrib.auth.decorators import login_required
@@ -9,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from comments.models import Comments
 from comments.forms import CommentForm
 from .utils import get_data_from_model_Zayavka, get_filters_for_template
+from notifications.models import create_notification
 
 
 
@@ -36,8 +38,11 @@ class ZayavkaCreate(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         # Перенаправить после успешного создания заявки. TODO заменить на reverse_lazy, переадресацию на созданную заявку detail
+        # zayavka = self.get_object()
+        # create_notification(User.objects.get(role__work_category=zayavka.categoty), zayavka, "create")
         return reverse('zayavki:zayavki_list')
 
+    
 
 def process_command(request):
     """ Обработка нажатий кнопок в заявке"""
