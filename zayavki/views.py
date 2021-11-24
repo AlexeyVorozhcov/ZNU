@@ -8,11 +8,11 @@ from django.views.generic import UpdateView, DetailView, CreateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from comments.models import Comments
 from comments.forms import CommentForm
-from .utils import get_data_from_model_Zayavka
+from .utils import get_data_from_model_Zayavka, get_filters_for_template
 
 
 
-KOL_RECORDS_ON_PAGE = 8
+KOL_RECORDS_ON_PAGE = 10
 
 
 
@@ -220,8 +220,8 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Заявки на уценку"
         context["name_page"] = "Заявки на уценку"
-        context['filters'] = FiltersOfZayavok.objects.all()
-        context['cur_filter'] = self.get_post_filter()        
+        context['filters'] = get_filters_for_template(self.request.user)
+        context['cur_filter'] = self.get_post_filter()              
         return context
     
     def get_default_filter(self):
@@ -230,7 +230,6 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
         Returns:
             [str]: [значение поля link объекта из таблицы FiltersOfZayavok, в котором в поле for_roles есть роль текущего пользователя]
         """        
-        # получить фильтр по умолчанию, который зависит от роли пользователя
         result = FiltersOfZayavok.objects.get(for_roles=self.request.user.role).link
         return result
         

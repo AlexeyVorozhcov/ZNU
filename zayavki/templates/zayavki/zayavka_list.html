@@ -25,11 +25,12 @@
         <div class="select_filter">
             {% for one_filter in filters %}
                 <div>
-                    {% if one_filter.link != cur_filter %} 
-                        <a class="btn btn-outline-primary btn-sm text-nowrap" href="{% url 'zayavki:zayavki_filter_list' one_filter.link %}" role="button">{{ one_filter.label }}</a>
-                    {% else %}
-                        <a class="btn btn-primary btn-sm text-nowrap" href="{% url 'zayavki:zayavki_filter_list' one_filter.link %}" role="button">{{ one_filter.label }}</a>
-                    {% endif %}
+                    <a 
+                      {% if one_filter.link != cur_filter %} class="btn btn-outline-primary btn-sm text-nowrap" {% else %} class="btn btn-primary btn-sm text-nowrap" {% endif %} 
+                      href="{% url 'zayavki:zayavki_filter_list' one_filter.link %}" 
+                      role="button">
+                      {{ one_filter.label }} {{ one_filter.count }}
+                    </a>
                 </div>    
             {% endfor %}            
         </div>

@@ -18,9 +18,13 @@ def login(request):
             username = request.POST['username']
             password = request.POST['password']
             user = auth.authenticate(username=username, password=password)
-            if user and user.is_active:
+            if user and user.is_active and user.role:                
                 auth.login(request, user)
                 return HttpResponseRedirect(reverse("main_page:index"))
+            else: 
+                pass     
+                # TODO переадресовать на шаблон с сообщением о невозможности авторизации с указанием причин          
+                
     else:
         form = UserLoginForm()
     template = "users/login.html"
