@@ -5,7 +5,7 @@ from zayavki.models import Zayavka
 # Create your models here.
 class Notifications(models.Model):
     created = models.DateField(auto_now_add=True)
-    recipient = models.ManyToManyField(User, default=None)
+    recipient = models.ManyToManyField(User)
     zayavka = models.ForeignKey(Zayavka, default=None, null=True, on_delete=models.PROTECT)
     text = models.CharField(max_length=250)
 
@@ -19,6 +19,8 @@ class Notifications(models.Model):
     
 def create_notification(recipient, zayavka, type_):
     text=""
-    if type=="create":
-        text = f"Магазин {zayavka.user.shop} создал новую заявку на уценку товара {zayavka.name}."
-    Notifications.objects.create(recipient=recipient, zayavka=zayavka, text=text)
+    if type_=="create":
+        text = f'Магазин {zayavka.user.shop} создал новую заявку на уценку товара "{zayavka.name}".'
+    new_notifications = Notifications(zayavka=zayavka, text=text)
+    new_notifications.save()
+    new_notifications.recipient.add(recipient)

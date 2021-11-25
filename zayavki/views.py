@@ -27,6 +27,9 @@ class ZayavkaCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         # Добавить текущего пользователя, кто создал заявку
         form.instance.user = self.request.user
+        zayavka = form.save()
+        recipient_of_notification = User.objects.filter(role__namerole__startswith="Менеджер - ").get(role__work_category=zayavka.category)
+        create_notification(recipient_of_notification, zayavka, "create")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
