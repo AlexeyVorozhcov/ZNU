@@ -21,6 +21,10 @@ def create_notification(recipient, zayavka, type_):
     text=""
     if type_=="create":
         text = f'Магазин {zayavka.user.shop} создал новую заявку на уценку товара "{zayavka.name}".'
+    if type_=="status1-true":
+        text = f'Менеджер одобрил заявку на уценку товара "{zayavka.name}".'    
+    if type_=="status2-true":
+        text = f'Менеджер отклонил вашу заявку на уценку товара "{zayavka.name}".'         
     new_notifications = Notifications(zayavka=zayavka, text=text)
     new_notifications.save()
     new_notifications.recipient.add(recipient)

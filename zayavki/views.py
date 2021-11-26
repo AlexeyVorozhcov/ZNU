@@ -58,10 +58,18 @@ def process_command(request):
             return HttpResponseRedirect(reverse('zayavki:zayavka-update', args=(_id,)))
         if '_status1' in request.POST:
             zayavka.status1 = True
-            zayavka.status2 = False            
+            zayavka.status2 = False    
+            # Определить получателя уведомления
+            recipient_of_notification = User.objects.filter(role__namerole__startswith="Менеджер по уценке").get(role__work_category=zayavka.category)
+            # Создать уведомление
+            create_notification(recipient_of_notification, zayavka, "status1-true")        
         if '_status2' in request.POST:        
             zayavka.status1 = False
             zayavka.status2 = True
+            # Определить получателя уведомления
+            recipient_of_notification =zayavka.user
+            # Создать уведомление
+            create_notification(recipient_of_notification, zayavka, "status2-true")                  
         if '_cancel_approve' in request.POST:        
             zayavka.status1 = False
             zayavka.status2 = False
