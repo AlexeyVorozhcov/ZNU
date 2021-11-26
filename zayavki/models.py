@@ -15,7 +15,7 @@ class FiltersOfZayavok(models.Model):
     status4 = models.BooleanField(default=None, null=True)  # ценник сменен
     status5 = models.BooleanField(default=None, null=True)  # в архиве
     status6 = models.BooleanField(default=None, null=True)    # остальные поля - резервные
-    for_roles = models.ManyToManyField(Roles, default=None) # для каких ролей пользователя является дефолтным
+    for_roles = models.ManyToManyField(Roles) # для каких ролей пользователя является дефолтным
     
     class Meta:
         verbose_name_plural = "Фильтры заявок"
@@ -49,7 +49,7 @@ class Zayavka(models.Model):
         verbose_name_plural = "Заявки"
         verbose_name = "Заявка"
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
