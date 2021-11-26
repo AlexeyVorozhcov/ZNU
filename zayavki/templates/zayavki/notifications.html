@@ -1,0 +1,10 @@
+<br>
+<br>
+Уведомления
+<br>
+
+{% for notification in notifications %}
+    <p> {{notification.created}} : {{ notification.text }}. <a href="{% url 'zayavki:zayavka-detail' notification.zayavka_id %}"> Открыть</a>
+{% endfor %}
+
+    

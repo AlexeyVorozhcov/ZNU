@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from users.models import User
 from zayavki.models import Zayavka, FiltersOfZayavok
 from zayavki.forms import AddZayavkaForm
 from django.contrib.auth.decorators import login_required
@@ -9,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from comments.models import Comments
 from comments.forms import CommentForm
 from .utils import get_data_from_model_Zayavka, get_filters_for_template
+from notifications.models import create_notification, Notifications
 
 
 
@@ -25,6 +27,11 @@ class ZayavkaCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         # Добавить текущего пользователя, кто создал заявку
         form.instance.user = self.request.user
+        zayavka = form.save()
+        # Определить получателя уведомления
+        recipient_of_notification = User.objects.filter(role__namerole__startswith="Менеджер - ").get(role__work_category=zayavka.category)
+        # Создать уведомление
+        create_notification(recipient_of_notification, zayavka, "create")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -36,8 +43,11 @@ class ZayavkaCreate(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         # Перенаправить после успешного создания заявки. TODO заменить на reverse_lazy, переадресацию на созданную заявку detail
+        # zayavka = self.get_object()
+        # create_notification(User.objects.get(role__work_category=zayavka.categoty), zayavka, "create")
         return reverse('zayavki:zayavki_list')
 
+    
 
 def process_command(request):
     """ Обработка нажатий кнопок в заявке"""
@@ -221,8 +231,16 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
         context["title"] = "Заявки на уценку"
         context["name_page"] = "Заявки на уценку"
         context['filters'] = get_filters_for_template(self.request.user)
-        context['cur_filter'] = self.get_post_filter()              
+        context['cur_filter'] = self.get_post_filter()   
+        context['notifications'] = self.get_notifications()           
         return context
+    
+    def get_notifications(self):
+        notifications = Notifications.objects.filter(recipient=self.request.user)
+        result = []
+        for ntf in notifications:
+            result.append({"created":ntf.created, "text":ntf.text, "zayavka_id":ntf.zayavka.id})
+        return result    
     
     def get_default_filter(self):
         """Получить текущий фильтр по умолчанию, который зависит от роли пользователя
