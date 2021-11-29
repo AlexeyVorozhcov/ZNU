@@ -9,7 +9,7 @@ from django.views.generic import UpdateView, DetailView, CreateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from comments.models import Comments
 from comments.forms import CommentForm
-from .utils import get_data_from_model_Zayavka, get_filters_for_template
+# from .utils import get_data_from_model_Zayavka, get_filters_for_template
 from notifications.models import create_notification, Notifications
 
 
@@ -58,17 +58,13 @@ def process_command(request):
             return HttpResponseRedirect(reverse('zayavki:zayavka-update', args=(_id,)))
         if '_status1' in request.POST:
             zayavka.status1 = True
-            zayavka.status2 = False    
-            # Определить получателя уведомления
+            zayavka.status2 = False
             recipient_of_notification = User.objects.filter(role__namerole__startswith="Менеджер по уценке").get(role__work_category=zayavka.category)
-            # Создать уведомление
             create_notification(recipient_of_notification, zayavka, "status1-true")        
         if '_status2' in request.POST:        
             zayavka.status1 = False
             zayavka.status2 = True
-            # Определить получателя уведомления
             recipient_of_notification =zayavka.user
-            # Создать уведомление
             create_notification(recipient_of_notification, zayavka, "status2-true")                  
         if '_cancel_approve' in request.POST:        
             zayavka.status1 = False
@@ -233,12 +229,25 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
     template_name = "zayavki/zayavka_list.html"
     context_object_name = "zayavki"
     
+    def get_queryset(self):  
+        """Получает данные из БД на основании текущего фильтра заявок и текущего пользователя"""    
+        return Zayavka.users_queryset_onfilter(self.request.user, self.get_post_filter())
+    
+    def get_post_filter(self):
+        """Получает параметр "filter" из полученного POST"""        
+        return self.kwargs.get('filter', self.get_default_filter())
+    
+    def get_default_filter(self):
+        """Получить текущий фильтр по умолчанию, который зависит от роли пользователя"""        
+        result = FiltersOfZayavok.objects.get(for_roles=self.request.user.role).link
+        return result
+    
     def get_context_data(self, **kwargs):
         # заполняем контекст для передачи в шаблон
         context = super().get_context_data(**kwargs)
         context["title"] = "Заявки на уценку"
         context["name_page"] = "Заявки на уценку"
-        context['filters'] = get_filters_for_template(self.request.user)
+        context['filters'] = FiltersOfZayavok.listdict_for_template(self.request.user)
         context['cur_filter'] = self.get_post_filter()   
         context['notifications'] = self.get_notifications()           
         return context
@@ -250,30 +259,11 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
             result.append({"created":ntf.created, "text":ntf.text, "zayavka_id":ntf.zayavka.id})
         return result    
     
-    def get_default_filter(self):
-        """Получить текущий фильтр по умолчанию, который зависит от роли пользователя
-                
-        Returns:
-            [str]: [значение поля link объекта из таблицы FiltersOfZayavok, в котором в поле for_roles есть роль текущего пользователя]
-        """        
-        result = FiltersOfZayavok.objects.get(for_roles=self.request.user.role).link
-        return result
-        
-    def get_post_filter(self):
-        """Получает параметр "filter" из полученного POST
-
-        Returns:
-            [str]: [значение в переданном параметре "filter" либо значение по умолчанию, полученное из метода self.get_default_filter]
-        """        
-        return self.kwargs.get('filter', self.get_default_filter())
     
-    def get_queryset(self):  
-        """Получает данные из БД на основании текущего фильтра заявок и текущего пользователя
-
-        Returns:
-            [QuerySet]: [список записей из базы данных]
-        """        """"""    
-        return get_data_from_model_Zayavka(self.get_post_filter(), self.request.user)
+        
+    
+    
+    
     
 
 

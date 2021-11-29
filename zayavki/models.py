@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.query import QuerySet
 from users.models import Roles, User, Category, Shops
 from django.urls import reverse
 from comments.models import Comments
@@ -23,6 +24,17 @@ class FiltersOfZayavok(models.Model):
 
     def __str__(self):
         return self.label
+    
+    def listdict_for_template(user):
+        """Возвращает список словарей для использования в шаблоне в формате [{'label':label, 'link':link, 'count':count}]"""
+        result = []
+        counts = Zayavka.counts(user)
+        for filter_ in FiltersOfZayavok.objects.all():
+            result.append({"label":filter_.label, "link":filter_.link, "count":counts.get(filter_.link, "")})
+        return result   
+    
+
+
 
 class Zayavka(models.Model):
     user = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
@@ -40,8 +52,7 @@ class Zayavka(models.Model):
     status3 = models.BooleanField(default=False)  # уценено
     status4 = models.BooleanField(default=False)  # ценник сменен
     status5 = models.BooleanField(default=False)  # в архиве
-    status6 = models.BooleanField(default=False)    # остальные поля - резервные
-    
+    status6 = models.BooleanField(default=False)    # остальные поля - резервные    
     clarification_of_manager = models.CharField(max_length=150, blank=True)
     
 
@@ -61,4 +72,34 @@ class Zayavka(models.Model):
     def get_count_comments(self):
         return Comments.objects.filter(object_id=self.id).count()
     
+    def users_queryset(user):
+        """Возвращает пользовательский набор заявок без фильтра, т.е. всех заявок, которые доступны пользователю
+        
+        Если роль пользователя - Магазин, то отбираются все заявки, создателем которых является этот магазин
+        Если роль пользователя - Менеджер, то отбираются те заявки, категории которых есть в рабочих категориях роли пользователя.
+        """
+        if user.role.namerole == "Магазин":
+            return Zayavka.objects.filter(user__shop=user.shop).order_by("-id")
+        else:
+            return Zayavka.objects.filter(category__in=user.role.work_category.all()).order_by("-id")
+        
+    def users_queryset_onfilter(user, filter_:FiltersOfZayavok):
+        """ Возвращает queryset из пользовательского набора заявок, соответствующих filter_, отсортированных по убыванию id"""
+        users_queryset = Zayavka.users_queryset(user)
+        return users_queryset.filter(
+                status1__in=[True,False] if filter_.status1==None else  [filter_.status1],
+                status2__in=[True,False] if filter_.status2==None else  [filter_.status2],
+                status3__in=[True,False] if filter_.status3==None else  [filter_.status3],
+                status4__in=[True,False] if filter_.status4==None else  [filter_.status4],
+                status5__in=[True,False] if filter_.status5==None else  [filter_.status5],
+                status6__in=[True,False] if filter_.status6==None else  [filter_.status6]
+                ).order_by("-id")
+    
+    def counts(user):
+        """Возвращает словарь с количеством заявок в каждом фильтре в формате {"link" : int}"""
+        result = {}
+        for filter_ in FiltersOfZayavok.objects.all():
+            result[filter_.link] = Zayavka.users_queryset_onfilter(user, filter_).count()  
+            if result[filter_.link]==0: result[filter_.link] = ""     
+        return result   
     
