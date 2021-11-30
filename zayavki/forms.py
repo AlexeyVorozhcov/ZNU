@@ -7,12 +7,12 @@ from django.shortcuts import resolve_url
 from zayavki.models import Zayavka, Category
 from users.models import User
 
-def get_gategories(qset:QuerySet):
-        all = qset.objects.all()
-        result = []
-        for i, category in enumerate(all):
-            result.append((str(i), category))
-        return result    
+# def get_gategories(qset:QuerySet):
+#         all = qset.objects.all()
+#         result = []
+#         for i, category in enumerate(all):
+#             result.append((str(i), category))
+#         return result    
 
 
 

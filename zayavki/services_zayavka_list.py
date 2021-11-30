@@ -2,7 +2,7 @@ from django.db.models.query import QuerySet
 from .models import Zayavka, FiltersOfZayavok
 from users.models import User
 
-def get_users_default_filter(user:User):
+def get_users_default_filter(user:User) -> str:
     """Возвращает линк текущего фильтр пользователя по умолчанию, который зависит от роли пользователя"""        
     return FiltersOfZayavok.objects.get(for_roles=user.role).link
 
@@ -35,7 +35,7 @@ def get_count_of_filter(user:User, filter_link:str):
     return get_users_queryset_onfilter(user, filter_link).count()
 
 def get_listdict_of_filters_with_counts(user:User):
-    """Возвращает список словарей в формате {"label":label, "link":link, "count" : int}"""
+    """Возвращает список словарей в формате {"label":label, "link":link, "count":int}"""
     result = []
     for filter_ in FiltersOfZayavok.objects.all():
         temp = {"label":filter_.label, "link":filter_.link, "count":get_count_of_filter(user, filter_.link)}
