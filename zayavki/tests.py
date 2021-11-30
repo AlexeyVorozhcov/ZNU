@@ -1,6 +1,8 @@
 from django.test import TestCase
 from .models import Zayavka, FiltersOfZayavok
 from users.models import User, Roles, Category, Shops
+from .services import get_count_of_filter, get_users_queryset, get_users_default_filter
+
 
 
 class FilterTestCase(TestCase):
@@ -20,13 +22,27 @@ class FilterTestCase(TestCase):
         filter_all = FiltersOfZayavok.objects.create(label="Все",
                                                     link="all")
         filter_all.for_roles.add(role)
-        
-    def test_listdict_for_template(self):
+    
+    def test_get_users_queryset(self):
         user = User.objects.get(id=1)
-        result_start = FiltersOfZayavok.listdict_for_template(user)
-        result_end = [{"label":"Все", "link":"all", "count":1}]
-        self.assertEqual(result_start, result_end)    
+        result_start = get_users_queryset(user).get(id=1).name        
+        self.assertEqual(result_start, "Человек паук")  
         
+    def test_get_users_default_filter(self):
+        user = User.objects.get(id=1)    
+        result_start=get_users_default_filter(user)
+        self.assertEqual(result_start, "all")  
+        
+        
+    def test_get_count_of_filter(self):
+        user = User.objects.get(id=1)
+        filter_ = FiltersOfZayavok.objects.get(label="Все")
+        result_start = get_count_of_filter(user, filter_)
+        # result_end = [{"label":"Все", "link":"all"}]
+        result_end = 1
+        self.assertEqual(result_start, result_end)    
+    
+  
         
         
         

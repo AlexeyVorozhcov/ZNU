@@ -1,18 +1,17 @@
-from django.shortcuts import render, get_object_or_404
-from users.models import User
-from zayavki.models import Zayavka, FiltersOfZayavok
-from zayavki.forms import AddZayavkaForm
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import HttpResponseRedirect
-from django.urls import reverse
-from django.views.generic import UpdateView, DetailView, CreateView, ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from comments.models import Comments
 from comments.forms import CommentForm
+from comments.models import Comments
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
+from django.urls import reverse
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 # from .utils import get_data_from_model_Zayavka, get_filters_for_template
-from notifications.models import create_notification, Notifications
+from notifications.models import Notifications, create_notification
+from users.models import User
 
-
+from zayavki.forms import AddZayavkaForm
+from zayavki.models import FiltersOfZayavok, Zayavka
+from .services import get_users_queryset_onfilter, get_users_default_filter, get_listdict_of_filters_with_counts
 
 KOL_RECORDS_ON_PAGE = 10
 
@@ -231,24 +230,21 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
     
     def get_queryset(self):  
         """Получает данные из БД на основании текущего фильтра заявок и текущего пользователя"""    
-        return Zayavka.users_queryset_onfilter(self.request.user, self.get_post_filter())
+        return get_users_queryset_onfilter(self.request.user, self.get_post_filter())
     
-    def get_post_filter(self):
-        """Получает параметр "filter" из полученного POST"""        
-        return self.kwargs.get('filter', self.get_default_filter())
+    def get_filter_from_post_or_default(self):
+        """Возвращает параметр "filter" из полученного POST
+        Если в POST нет параметра filter, возвращает фильтр текущего пользователя по умолчанию"""        
+        return self.kwargs.get('filter', get_users_default_filter(self.request.user))
     
-    def get_default_filter(self):
-        """Получить текущий фильтр по умолчанию, который зависит от роли пользователя"""        
-        result = FiltersOfZayavok.objects.get(for_roles=self.request.user.role).link
-        return result
     
     def get_context_data(self, **kwargs):
         # заполняем контекст для передачи в шаблон
         context = super().get_context_data(**kwargs)
         context["title"] = "Заявки на уценку"
         context["name_page"] = "Заявки на уценку"
-        context['filters'] = FiltersOfZayavok.listdict_for_template(self.request.user)
-        context['cur_filter'] = self.get_post_filter()   
+        context['filters'] = get_listdict_of_filters_with_counts(self.request.user)
+        context['cur_filter'] = self.get_filter_from_post_or_default()   
         context['notifications'] = self.get_notifications()           
         return context
     
