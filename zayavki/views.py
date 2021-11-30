@@ -230,7 +230,7 @@ class ZayavkaFilterList(LoginRequiredMixin, ListView):
     
     def get_queryset(self):  
         """Получает данные из БД на основании текущего фильтра заявок и текущего пользователя"""    
-        return get_users_queryset_onfilter(self.request.user, self.get_post_filter())
+        return get_users_queryset_onfilter(self.request.user, self.get_filter_from_post_or_default())
     
     def get_filter_from_post_or_default(self):
         """Возвращает параметр "filter" из полученного POST

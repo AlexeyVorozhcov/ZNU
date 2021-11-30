@@ -35,9 +35,8 @@ class FilterTestCase(TestCase):
         
         
     def test_get_count_of_filter(self):
-        user = User.objects.get(id=1)
-        filter_ = FiltersOfZayavok.objects.get(label="Все")
-        result_start = get_count_of_filter(user, filter_)
+        user = User.objects.get(id=1)        
+        result_start = get_count_of_filter(user, "all")
         # result_end = [{"label":"Все", "link":"all"}]
         result_end = 1
         self.assertEqual(result_start, result_end)    

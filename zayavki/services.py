@@ -17,8 +17,9 @@ def get_users_queryset(user:User):
     else:
         return Zayavka.objects.filter(category__in=user.role.work_category.all()).order_by("-id")
     
-def get_users_queryset_onfilter(user:User, filter_:FiltersOfZayavok):
+def get_users_queryset_onfilter(user:User, filter_link:str):
     """ Возвращает queryset из пользовательского набора заявок с примененным фильтром filter_, отсортированных по убыванию id"""
+    filter_ = FiltersOfZayavok.objects.get(link=filter_link)
     users_queryset = get_users_queryset(user)
     return users_queryset.filter(
             status1__in=[True,False] if filter_.status1==None else  [filter_.status1],
@@ -29,15 +30,15 @@ def get_users_queryset_onfilter(user:User, filter_:FiltersOfZayavok):
             status6__in=[True,False] if filter_.status6==None else  [filter_.status6]
             ).order_by("-id")    
 
-def get_count_of_filter(user:User, filter_:FiltersOfZayavok):
+def get_count_of_filter(user:User, filter_link:str):
     """Возвращает количество заявок по переданному фильтру у переданного юзера"""
-    return get_users_queryset_onfilter(user, filter_).count()
+    return get_users_queryset_onfilter(user, filter_link).count()
 
 def get_listdict_of_filters_with_counts(user:User):
     """Возвращает список словарей в формате {"label":label, "link":link, "count" : int}"""
     result = []
     for filter_ in FiltersOfZayavok.objects.all():
-        temp = result.append({"label":filter_.label, "link":filter_.link, "count":get_count_of_filter(filter_)})
+        temp = {"label":filter_.label, "link":filter_.link, "count":get_count_of_filter(user, filter_.link)}
         if temp["count"]==0: temp["count"] = "" 
         result.append(temp)    
     return result  
