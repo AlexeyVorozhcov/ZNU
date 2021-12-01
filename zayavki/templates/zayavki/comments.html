@@ -8,7 +8,7 @@
 <br>
 <br>
 Добавить комментарий:
-<form action="{% url 'comments:add-comment' %}" method="post">
+<form action="{% url 'zayavki:add-comment' %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="_id" value="{{zayavka.id}}">
     <div class="col-md-6 col-sm-12">

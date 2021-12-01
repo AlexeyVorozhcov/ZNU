@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.query import QuerySet
 from users.models import Roles, User, Category, Shops
 from django.urls import reverse
-from comments.models import Comments
+
 
 
 # Create your models here.
@@ -60,30 +60,18 @@ class Zayavka(models.Model):
         #     return reverse('author-detail', kwargs={'pk': self.pk})
     
     def get_count_comments(self):
-        return Comments.objects.filter(object_id=self.id).count()
+        return Comments2.objects.filter(object_id=self.id).count()
+
+class Comments2(models.Model):
+    object_id = models.PositiveSmallIntegerField(null=True)  # id объекта, к которому будут относиться комментарии, например, Заявки
+    created = models.DateTimeField(auto_now_add=True) # дата и время создания комментария
+    autor =models.CharField(max_length=50, default="") # id пользователя, который является автором комментария
+    body = models.TextField(null=True) # текст комментария
+    active = models.BooleanField(default=True) # для отключения неприемлемых комментариев
+
+    class Meta:
+            verbose_name_plural = "Комментарии"
+            verbose_name = "Комментарий"
     
-    # def users_queryset(user:User):
-    #     """Возвращает пользовательский набор заявок без фильтра, т.е. всех заявок, которые доступны пользователю
-        
-    #     Если роль пользователя - Магазин, то отбираются все заявки, создателем которых является этот магазин
-    #     Если роль пользователя - Менеджер, то отбираются те заявки, категории которых есть в рабочих категориях роли пользователя.
-    #     """
-    #     if user.role.namerole == "Магазин":
-    #         return Zayavka.objects.filter(user__shop=user.shop).order_by("-id")
-    #     else:
-    #         return Zayavka.objects.filter(category__in=user.role.work_category.all()).order_by("-id")
-        
-    # def users_queryset_onfilter(user:User, filter_:FiltersOfZayavok):
-    #     """ Возвращает queryset из пользовательского набора заявок, соответствующих filter_, отсортированных по убыванию id"""
-    #     users_queryset = Zayavka.users_queryset(user)
-    #     return users_queryset.filter(
-    #             status1__in=[True,False] if filter_.status1==None else  [filter_.status1],
-    #             status2__in=[True,False] if filter_.status2==None else  [filter_.status2],
-    #             status3__in=[True,False] if filter_.status3==None else  [filter_.status3],
-    #             status4__in=[True,False] if filter_.status4==None else  [filter_.status4],
-    #             status5__in=[True,False] if filter_.status5==None else  [filter_.status5],
-    #             status6__in=[True,False] if filter_.status6==None else  [filter_.status6]
-    #             ).order_by("-id")
-    
-     
-    
+    def __str__(self) -> str:
+        return self.body    

@@ -63,6 +63,7 @@
                         <a href="{% url 'zayavki:zayavka-detail' zayavka.id%}"> {{zayavka}} </a>
                     </td>
                     <td>{{zayavka.description}}
+                        {# иконка наличия фотографий в заявке #}
                         {% if zayavka.foto1 %}
                             <a href="/media/{{zayavka.foto1}}"  target="_blank" class="text-decoration-none">
                                 <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
@@ -75,6 +76,7 @@
                         {% endif %}                    
                     </td>
                     <td>{{zayavka.clarification}} 
+                        {# иконка количества комментариев в заявке #}
                         {% if zayavka.get_count_comments > 0 %}
                         <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}" class="text-decoration-none">
                            <i class="fa fa-comment-o" aria-hidden="true"></i> {{ zayavka.get_count_comments }}

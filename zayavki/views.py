@@ -1,5 +1,5 @@
-from comments.forms import CommentForm
-from comments.models import Comments
+from .forms import CommentForm
+from .models import Comments2
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
@@ -11,13 +11,46 @@ from users.models import User
 
 from zayavki.forms import AddZayavkaForm
 from zayavki.models import Zayavka
-from .services_zayavka_list import get_users_queryset_onfilter, get_users_default_filter, get_listdict_of_filters_with_counts
+from .services_zayavka_list import get_users_queryset_onfilter, get_users_default_filter, get_listdict_of_filters_with_counts, get_notifications
 from .services_zayavka_detail import ZayavkaProperties
 
 
 KOL_RECORDS_ON_PAGE = 10
 
+class ZayavkaFilterList(LoginRequiredMixin, ListView):
+    '''Представление списка заявок'''
+    model = Zayavka
+    paginate_by = KOL_RECORDS_ON_PAGE
+    template_name = "zayavki/zayavka_list.html"
+    context_object_name = "zayavki"
 
+    def get_queryset(self):
+        """Возвращает пользовательский набор заявок на основании текущего фильтра и текущего пользователя"""
+        return get_users_queryset_onfilter(self.request.user, self.get_filter_from_post_or_default())
+
+    def get_filter_from_post_or_default(self):
+        """Возвращает параметр "filter" из полученного POST
+        Если в POST нет параметра filter, возвращает фильтр текущего пользователя по умолчанию"""
+        return self.kwargs.get('filter', get_users_default_filter(self.request.user))
+
+    def get_context_data(self, **kwargs):
+        # заполняем контекст для передачи в шаблон
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Заявки на уценку"
+        context["name_page"] = "Заявки на уценку"
+        context['filters'] = get_listdict_of_filters_with_counts(self.request.user)
+        context['cur_filter'] = self.get_filter_from_post_or_default()
+        context['notifications'] = get_notifications(self.request.user)
+        return context
+
+    # def get_notifications(self):
+    #     notifications = Notifications.objects.filter(
+    #         recipient=self.request.user)
+    #     result = []
+    #     for ntf in notifications:
+    #         result.append(
+    #             {"created": ntf.created, "text": ntf.text, "zayavka_id": ntf.zayavka.id})
+    #     return result
 
 class ZayavkaCreate(LoginRequiredMixin, CreateView):
 
@@ -30,7 +63,8 @@ class ZayavkaCreate(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         zayavka = form.save()
         # Определить получателя уведомления
-        recipient_of_notification = User.objects.filter(role__namerole__startswith="Менеджер - ").get(role__work_category=zayavka.category)
+        recipient_of_notification = User.objects.filter(
+            role__namerole__startswith="Менеджер - ").get(role__work_category=zayavka.category)
         # Создать уведомление
         create_notification(recipient_of_notification, zayavka, "create")
         return super().form_valid(form)
@@ -44,8 +78,6 @@ class ZayavkaCreate(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         # Перенаправить после успешного создания заявки. TODO заменить на reverse_lazy, переадресацию на созданную заявку detail
-        # zayavka = self.get_object()
-        # create_notification(User.objects.get(role__work_category=zayavka.categoty), zayavka, "create")
         return reverse('zayavki:zayavki_list')
 
     
@@ -98,7 +130,7 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
     
     def get_comments(self):
         zayavka = self.get_object()
-        return Comments.objects.filter(object_id=zayavka.id).order_by("created")
+        return Comments2.objects.filter(object_id=zayavka.id).order_by("created")
        
 
 class ZayavkaUpdate(LoginRequiredMixin, UpdateView):
@@ -107,48 +139,30 @@ class ZayavkaUpdate(LoginRequiredMixin, UpdateView):
     form_class = AddZayavkaForm
 
 
-class ZayavkaFilterList(LoginRequiredMixin, ListView):
-    ''' 
-    Представление списка заявок.
-    '''
-    model = Zayavka
-    paginate_by = KOL_RECORDS_ON_PAGE
-    template_name = "zayavki/zayavka_list.html"
-    context_object_name = "zayavki"
-    
-    def get_queryset(self):  
-        """Возвращает пользовательский набор заявок на основании текущего фильтра и текущего пользователя"""    
-        return get_users_queryset_onfilter(self.request.user, self.get_filter_from_post_or_default())
-    
-    def get_filter_from_post_or_default(self):
-        """Возвращает параметр "filter" из полученного POST
-        Если в POST нет параметра filter, возвращает фильтр текущего пользователя по умолчанию"""        
-        return self.kwargs.get('filter', get_users_default_filter(self.request.user))
-    
-    
-    def get_context_data(self, **kwargs):
-        # заполняем контекст для передачи в шаблон
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Заявки на уценку"
-        context["name_page"] = "Заявки на уценку"
-        context['filters'] = get_listdict_of_filters_with_counts(self.request.user)
-        context['cur_filter'] = self.get_filter_from_post_or_default()   
-        context['notifications'] = self.get_notifications()           
-        return context
-    
-    def get_notifications(self):
-        notifications = Notifications.objects.filter(recipient=self.request.user)
-        result = []
-        for ntf in notifications:
-            result.append({"created":ntf.created, "text":ntf.text, "zayavka_id":ntf.zayavka.id})
-        return result    
+
     
     
         
     
     
     
-    
+def add_comment(request):
+    """ Обработка добавления комментария """       
+    if request.method=="POST":
+        if request.POST['_id']: _id = int(request.POST['_id'])
+        else: _id = 0    
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.autor = request.user
+            comment.object_id = _id  
+            comment.save()            
+            return HttpResponseRedirect(reverse('zayavki:zayavka-detail', args=(_id,)))
+        else:
+            print ("Что-то пошлдо не так.")
+            print (form.data)
+    else:
+        return HttpResponseRedirect(reverse('zayavki:zayavki_list'))      
 
 
 

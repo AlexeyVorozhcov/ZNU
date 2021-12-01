@@ -1,11 +1,12 @@
 from django.contrib import admin
 from zayavki.models import Zayavka, FiltersOfZayavok
+from .models import Comments2
 # from django.db import models
 
 # Register your models here.
 
 
-# admin.site.register(Zayavka)
+admin.site.register(Comments2)
 
 @admin.register(Zayavka)
 class ProductAdmin(admin.ModelAdmin):

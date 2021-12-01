@@ -3,7 +3,6 @@ from users.models import User
 
 
 
-
 class ZayavkaProperties():
     def __init__(self, zayavka:Zayavka, user:User):
         self.zayavka = zayavka
