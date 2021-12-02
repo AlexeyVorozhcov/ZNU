@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import manager
 from django.db.models.query import QuerySet
 from users.models import Roles, User, Category, Shops
 from django.urls import reverse
@@ -44,6 +45,8 @@ class Zayavka(models.Model):
     status5 = models.BooleanField(default=False)  # в архиве
     status6 = models.BooleanField(default=False)    # остальные поля - резервные    
     clarification_of_manager = models.CharField(max_length=150, blank=True)
+    manager = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT, related_name='+')
+    # manager - тот, кто последний вносил изменения в статусы
     
 
     class Meta:
@@ -75,3 +78,29 @@ class Comments2(models.Model):
     
     def __str__(self) -> str:
         return self.body    
+    
+from enum import Enum, auto
+class EventNotification(Enum):
+    CREATE_ZAYAVKA = 'Магазин "#" создал новую заявку на уценку'
+    ADD_COMMENT = 'Добавлен новый комментарий в заявку'
+    SET_STATUS1_TRUE = 'Менеджер одобрил заявку'
+    SET_STATUS2_TRUE = 'Менеджер отклонил заявку'
+    SET_STATUS3_TRUE = 'Менеджер перевел товар в качество БУ или Discount'
+    SET_STATUS4_TRUE = "4"
+    SET_STATUS5_TRUE = "5"
+    
+    
+
+class Notifications2(models.Model):
+    created = models.DateField(auto_now_add=True)
+    recipient = models.ManyToManyField(User)
+    zayavka = models.ForeignKey(Zayavka, default=None, null=True, on_delete=models.PROTECT)
+    text = models.CharField(max_length=250)
+
+    
+    class Meta:
+        verbose_name_plural = "Уведомления"
+        verbose_name = "Уведомление"
+
+    def __str__(self):
+        return self.text

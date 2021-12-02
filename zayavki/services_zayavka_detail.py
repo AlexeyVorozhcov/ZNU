@@ -1,3 +1,4 @@
+
 from .models import Zayavka
 from users.models import User
 
@@ -96,7 +97,8 @@ class ZayavkaProperties():
         if self.zayavka.status5:
             return True
         else: 
-            return False      
+            return False   
+           
     def is_access_open(self) -> bool:
         """Возвращает bool -  доступна заявка пользователю или нет"""
         if self.zayavka.user.shop == self.user.shop or self.user.role.namerole[:3] == "Мен":

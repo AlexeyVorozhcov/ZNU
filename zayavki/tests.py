@@ -1,7 +1,7 @@
 from django.test import TestCase
 from .models import Zayavka, FiltersOfZayavok
 from users.models import User, Roles, Category, Shops
-from .services import get_count_of_filter, get_users_queryset, get_users_default_filter
+from .services_zayavka_list import get_count_of_filter, get_users_queryset, get_users_default_filter
 
 
 

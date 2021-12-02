@@ -1,7 +1,7 @@
 from django.db.models.query import QuerySet
 from .models import Zayavka, FiltersOfZayavok
 from users.models import User
-from notifications.models import Notifications
+from .models import Notifications2
 
 def get_users_default_filter(user:User) -> str:
     """Возвращает линк текущего фильтра пользователя по умолчанию, который зависит от роли пользователя"""        
@@ -47,12 +47,5 @@ def get_listdict_of_filters_with_counts(user:User):
 
 
 
-def get_notifications(user:User):
-        notifications = Notifications.objects.filter(
-            recipient=user).order_by("-created")
-        result = []
-        for ntf in notifications:
-            result.append(
-                {"created": ntf.created, "text": ntf.text, "zayavka_id": ntf.zayavka.id})
-        return result    
+  
 

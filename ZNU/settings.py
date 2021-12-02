@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'main_page',
     'users',
     # 'comments',
-    'notifications',
+    # 'notifications',
 ]
 
 MIDDLEWARE = [
