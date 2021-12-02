@@ -13,14 +13,19 @@
 
 
 {% block content %}
-    <div > 
+    <div >         
         {% comment %} Кнопка СОЗДАТЬ НОВУЮ ЗАЯВКУ {% endcomment %}
-        <div class="row justify-content-end">
-            <div class="col my-2 text-end">
-                <a class="btn btn-success text-nowrap" href="{% url 'zayavki:zayavka-create' %}">Создать новую заявку</a> 
-            </div>               
+        <div class="row justify-content-between">
+            <div class="col-8 m-auto">
+                <h2>Список заявок</h2>
+            </div>
+            <div class="col-4">
+                <div class="col my-2 text-end">
+                    <a class="btn btn-success text-nowrap" href="{% url 'zayavki:zayavka-create' %}">Создать новую заявку</a> 
+                </div>  
+            </div>
         </div>
-      
+              
         {% comment %} БЛОК ФИЛЬТРОВ {% endcomment %}
         <div class="select_filter">
             {% for one_filter in filters %}
@@ -29,8 +34,8 @@
                       {% if one_filter.link != cur_filter %} class="btn btn-outline-primary btn-sm text-nowrap" {% else %} class="btn btn-primary btn-sm text-nowrap" {% endif %} 
                       href="{% url 'zayavki:zayavki_filter_list' one_filter.link %}" 
                       role="button">
-                      {{ one_filter.label }} {{ one_filter.count }}
-                    </a>
+                      {{ one_filter.label }} {{ one_filter.count }}                      
+                    </a>                    
                 </div>    
             {% endfor %}            
         </div>
@@ -138,6 +143,7 @@
         </nav>
         {% endif %}
 
+        {# Блок уведомлений #}
         {% include "zayavki/notifications.html" %}
        
     </div>

@@ -1,10 +1,18 @@
-<br>
-<br>
-Уведомления
-<br>
+<h4>Уведомления</h4>
 
 {% for notification in notifications %}
-    <p> {{notification.created}} : {{ notification.text }} <a href="{% url 'zayavki:zayavka-detail' notification.zayavka_id %}"> Открыть</a>
+    {% comment %} <p> {{notification.created}} : {{ notification.text }} <a href="{% url 'zayavki:zayavka-detail' notification.zayavka_id %}"> Открыть</a> {% endcomment %}
+    <div class="list-group">
+        <a href="{% url 'zayavki:zayavka-detail' notification.zayavka_id %}" 
+           class="list-group-item list-group-item-action mb-1" aria-current="true">
+            <div class="d-flex w-100">            
+                <small class="pe-2 m-0">{{notification.created|date:"d E"}}:</small>
+                <small class="p-0 m-0">{{ notification.text }}</small>
+            </div>           
+        </a>
+    </div>    
+
+
 {% endfor %}
 
     
