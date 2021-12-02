@@ -1,3 +1,4 @@
+from enum import Enum, auto
 from django.db import models
 from django.db.models import manager
 from django.db.models.query import QuerySet
@@ -5,20 +6,21 @@ from users.models import Roles, User, Category, Shops
 from django.urls import reverse
 
 
-
 # Create your models here.
 
 class FiltersOfZayavok(models.Model):
-    label = models.CharField(max_length=30) # Название/отображение на сайте
-    link = models.CharField(max_length=10) # как будет отображаться в ссылке
+    label = models.CharField(max_length=30)  # Название/отображение на сайте
+    link = models.CharField(max_length=10)  # как будет отображаться в ссылке
     status1 = models.BooleanField(default=None, null=True)  # одобрено
     status2 = models.BooleanField(default=None, null=True)  # отклонено
     status3 = models.BooleanField(default=None, null=True)  # уценено
     status4 = models.BooleanField(default=None, null=True)  # ценник сменен
     status5 = models.BooleanField(default=None, null=True)  # в архиве
-    status6 = models.BooleanField(default=None, null=True)    # остальные поля - резервные
-    for_roles = models.ManyToManyField(Roles) # для каких ролей пользователя является дефолтным
-    
+    # остальные поля - резервные
+    status6 = models.BooleanField(default=None, null=True)
+    # для каких ролей пользователя является дефолтным
+    for_roles = models.ManyToManyField(Roles)
+
     class Meta:
         verbose_name_plural = "Фильтры заявок"
         verbose_name = "Фильтр заявок"
@@ -28,7 +30,8 @@ class FiltersOfZayavok(models.Model):
 
 
 class Zayavka(models.Model):
-    user = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        User, default=None, null=True, on_delete=models.PROTECT)
     # shop = models.ForeignKey(Shops, default=None, null=True, on_delete=models.PROTECT)
     data = models.DateField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
@@ -43,11 +46,12 @@ class Zayavka(models.Model):
     status3 = models.BooleanField(default=False)  # уценено
     status4 = models.BooleanField(default=False)  # ценник сменен
     status5 = models.BooleanField(default=False)  # в архиве
-    status6 = models.BooleanField(default=False)    # остальные поля - резервные    
+    # остальные поля - резервные
+    status6 = models.BooleanField(default=False)
     clarification_of_manager = models.CharField(max_length=150, blank=True)
-    manager = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT, related_name='+')
+    manager = models.ForeignKey(
+        User, default=None, null=True, on_delete=models.PROTECT, related_name='+')
     # manager - тот, кто последний вносил изменения в статусы
-    
 
     class Meta:
         verbose_name_plural = "Заявки"
@@ -61,25 +65,30 @@ class Zayavka(models.Model):
         # TODO вернуть на страницу заявки detail
         # def get_absolute_url(self):
         #     return reverse('author-detail', kwargs={'pk': self.pk})
-    
+
     def get_count_comments(self):
         return Comments2.objects.filter(object_id=self.id).count()
 
+
 class Comments2(models.Model):
-    object_id = models.PositiveSmallIntegerField(null=True)  # id объекта, к которому будут относиться комментарии, например, Заявки
-    created = models.DateTimeField(auto_now_add=True) # дата и время создания комментария
-    autor =models.CharField(max_length=50, default="") # id пользователя, который является автором комментария
-    body = models.TextField(null=True) # текст комментария
-    active = models.BooleanField(default=True) # для отключения неприемлемых комментариев
+    # id объекта, к которому будут относиться комментарии, например, Заявки
+    object_id = models.PositiveSmallIntegerField(null=True)
+    # дата и время создания комментария
+    created = models.DateTimeField(auto_now_add=True)
+    # id пользователя, который является автором комментария
+    autor = models.CharField(max_length=50, default="")
+    body = models.TextField(null=True)  # текст комментария
+    # для отключения неприемлемых комментариев
+    active = models.BooleanField(default=True)
 
     class Meta:
-            verbose_name_plural = "Комментарии"
-            verbose_name = "Комментарий"
-    
+        verbose_name_plural = "Комментарии"
+        verbose_name = "Комментарий"
+
     def __str__(self) -> str:
-        return self.body    
-    
-from enum import Enum, auto
+        return self.body
+
+
 class EventNotification(Enum):
     CREATE_ZAYAVKA = 'Магазин "#" создал новую заявку на уценку'
     ADD_COMMENT = 'Добавлен новый комментарий в заявку'
@@ -88,16 +97,15 @@ class EventNotification(Enum):
     SET_STATUS3_TRUE = 'Менеджер перевел товар в качество БУ или Discount'
     SET_STATUS4_TRUE = "4"
     SET_STATUS5_TRUE = "5"
-    
-    
+
 
 class Notifications2(models.Model):
     created = models.DateField(auto_now_add=True)
     recipient = models.ManyToManyField(User)
-    zayavka = models.ForeignKey(Zayavka, default=None, null=True, on_delete=models.PROTECT)
+    zayavka = models.ForeignKey(
+        Zayavka, default=None, null=True, on_delete=models.PROTECT)
     text = models.CharField(max_length=250)
 
-    
     class Meta:
         verbose_name_plural = "Уведомления"
         verbose_name = "Уведомление"
