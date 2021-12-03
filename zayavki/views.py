@@ -20,6 +20,10 @@ from .service_notifications import MakerNotification, get_notifications
 
 KOL_RECORDS_ON_PAGE = 10
 
+
+def return_to_prev_page(request):
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 class ZayavkaFilterList(LoginRequiredMixin, ListView):
     '''Представление списка заявок'''
     model = Zayavka
@@ -69,11 +73,13 @@ class ZayavkaCreate(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Новая заявка"
         context["name_page"] = "Новая заявка"
+        context['prev'] = self.request.GET.get('prev')
         return context
 
     def get_success_url(self):
         # Перенаправить после успешного создания заявки. TODO заменить на reverse_lazy, переадресацию на созданную заявку detail
-        return reverse('zayavki:zayavki_list')
+        # return reverse('zayavki:zayavki_list')
+        return self.request.GET.get('prev', reverse('zayavki:zayavki_list'))
 
     
         
@@ -124,7 +130,8 @@ class ZayavkaDetail(LoginRequiredMixin, DetailView):
         context["status_as_text"] = zayavka.get_status_as_text()               
         context['btns'] = zayavka.get_btns() 
         context['comments'] = get_comments(self.get_object())
-        context['comments_form'] = CommentForm     
+        context['comments_form'] = CommentForm 
+        context['prev'] = self.request.GET.get('prev') 
         return context
     
        

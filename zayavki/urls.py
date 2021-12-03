@@ -1,5 +1,5 @@
 from django.urls import path
-from zayavki.views import ZayavkaUpdate, ZayavkaDetail, ZayavkaCreate, ZayavkaFilterList, process_command, add_comment
+from zayavki.views import ZayavkaUpdate, ZayavkaDetail, ZayavkaCreate, ZayavkaFilterList, process_command, add_comment, return_to_prev_page
 
 
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path("<int:pk>/update", ZayavkaUpdate.as_view(), name="zayavka-update"),
     path("command", process_command, name="zayavka-command"),
     path("add_comment", add_comment, name="add-comment"),
+    path("return_to_prev_page", return_to_prev_page, name="return_to_prev_page")
     
     
     

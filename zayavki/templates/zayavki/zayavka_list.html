@@ -21,7 +21,7 @@
             </div>
             <div class="col-4">
                 <div class="col my-2 text-end">
-                    <a class="btn btn-success text-nowrap" href="{% url 'zayavki:zayavka-create' %}">Создать новую заявку</a> 
+                    <a class="btn btn-success text-nowrap" href="{% url 'zayavki:zayavka-create' %}?prev={{ request.path }}">Создать новую заявку</a> 
                 </div>  
             </div>
         </div>
@@ -65,7 +65,7 @@
                     <td>{{zayavka.user.shop}}</td>
                     <td>{{zayavka.code}}</td>
                     <td>
-                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id%}"> {{zayavka}} </a>
+                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}?prev={{ request.path }}"> {{zayavka}} </a>
                     </td>
                     <td>{{zayavka.description}}
                         {# иконка наличия фотографий в заявке #}
@@ -83,7 +83,7 @@
                     <td>{{zayavka.clarification}} 
                         {# иконка количества комментариев в заявке #}
                         {% if zayavka.get_count_comments > 0 %}
-                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}" class="text-decoration-none">
+                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}?prev={{ request.path }}" class="text-decoration-none">
                            <i class="fa fa-comment-o" aria-hidden="true"></i> {{ zayavka.get_count_comments }}
                         </a> 
                         {% endif %}                       
