@@ -1,14 +1,19 @@
-<br>
-<br>
-Комментарии
+<h4 class="mt-3">Комментарии:</h4>
 {% for comment in comments%}
-    <p> {{comment.created}} : {{ comment.autor }}: {{ comment.body}}
-{% endfor %}
+    <div class="card" style="width: 100;">
+    {% comment %} <img src="..." class="card-img-top" alt="..."> {% endcomment %}
+    <div class="card-body">
+        <h5 class="card-title"> {{ comment.autor }}</h5>
+        <p class="card-text">{{ comment.body}}</p>
+    </div>
+    </div>
+{% endfor %}  
+
 
 <br>
 <br>
 Добавить комментарий:
-<form action="{% url 'comments:add-comment' %}" method="post">
+<form action="{% url 'zayavki:add-comment' %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="_id" value="{{zayavka.id}}">
     <div class="col-md-6 col-sm-12">

@@ -25,7 +25,7 @@ urlpatterns = [
     path('', include('main_page.urls', namespace="main_page")),
     path('users/', include('users.urls', namespace="users")),
     path('zayavki/', include('zayavki.urls', namespace="zayavki")),
-    path('comments/', include('comments.urls', namespace="comments")),
+    # path('comments/', include('comments.urls', namespace="comments")),
 ]
 
 if settings.DEBUG:

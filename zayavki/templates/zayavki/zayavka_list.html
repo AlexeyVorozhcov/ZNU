@@ -13,14 +13,19 @@
 
 
 {% block content %}
-    <div > 
+    <div >         
         {% comment %} Кнопка СОЗДАТЬ НОВУЮ ЗАЯВКУ {% endcomment %}
-        <div class="row justify-content-end">
-            <div class="col my-2 text-end">
-                <a class="btn btn-success text-nowrap" href="{% url 'zayavki:zayavka-create' %}">Создать новую заявку</a> 
-            </div>               
+        <div class="row justify-content-between">
+            <div class="col-8 m-auto">
+                <h2>Список заявок</h2>
+            </div>
+            <div class="col-4">
+                <div class="col my-2 text-end">
+                    <a class="btn btn-success text-nowrap" href="{% url 'zayavki:zayavka-create' %}?prev={{ request.path }}">Создать новую заявку</a> 
+                </div>  
+            </div>
         </div>
-      
+              
         {% comment %} БЛОК ФИЛЬТРОВ {% endcomment %}
         <div class="select_filter">
             {% for one_filter in filters %}
@@ -29,8 +34,8 @@
                       {% if one_filter.link != cur_filter %} class="btn btn-outline-primary btn-sm text-nowrap" {% else %} class="btn btn-primary btn-sm text-nowrap" {% endif %} 
                       href="{% url 'zayavki:zayavki_filter_list' one_filter.link %}" 
                       role="button">
-                      {{ one_filter.label }} {{ one_filter.count }}
-                    </a>
+                      {{ one_filter.label }} {{ one_filter.count }}                      
+                    </a>                    
                 </div>    
             {% endfor %}            
         </div>
@@ -60,9 +65,10 @@
                     <td>{{zayavka.user.shop}}</td>
                     <td>{{zayavka.code}}</td>
                     <td>
-                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id%}"> {{zayavka}} </a>
+                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}?prev={{ request.path }}"> {{zayavka}} </a>
                     </td>
                     <td>{{zayavka.description}}
+                        {# иконка наличия фотографий в заявке #}
                         {% if zayavka.foto1 %}
                             <a href="/media/{{zayavka.foto1}}"  target="_blank" class="text-decoration-none">
                                 <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i>
@@ -75,8 +81,9 @@
                         {% endif %}                    
                     </td>
                     <td>{{zayavka.clarification}} 
+                        {# иконка количества комментариев в заявке #}
                         {% if zayavka.get_count_comments > 0 %}
-                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}" class="text-decoration-none">
+                        <a href="{% url 'zayavki:zayavka-detail' zayavka.id %}?prev={{ request.path }}" class="text-decoration-none">
                            <i class="fa fa-comment-o" aria-hidden="true"></i> {{ zayavka.get_count_comments }}
                         </a> 
                         {% endif %}                       
@@ -135,6 +142,9 @@
             </ul>
         </nav>
         {% endif %}
+
+        {# Блок уведомлений #}
+        {% include "zayavki/notifications.html" %}
        
     </div>
 {% endblock content %}

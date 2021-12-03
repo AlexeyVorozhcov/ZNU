@@ -7,7 +7,7 @@
 
 
 {% block content %}
-    <a href="{% url 'zayavki:zayavki_list' %}" class="btn btn-link mb-2">Вернуться к списку</a>
+    <a href="{{ prev }}" class="btn btn-link mb-2">Вернуться к списку</a>
     {% comment %} TODO сделать редирект на предыдущую страницу {% endcomment %}
 
     {% if access_open %}  

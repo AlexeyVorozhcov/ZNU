@@ -6,13 +6,14 @@ from django.forms.models import BaseModelForm
 from django.shortcuts import resolve_url
 from zayavki.models import Zayavka, Category
 from users.models import User
+from .models import Comments2
 
-def get_gategories(qset:QuerySet):
-        all = qset.objects.all()
-        result = []
-        for i, category in enumerate(all):
-            result.append((str(i), category))
-        return result    
+# def get_gategories(qset:QuerySet):
+#         all = qset.objects.all()
+#         result = []
+#         for i, category in enumerate(all):
+#             result.append((str(i), category))
+#         return result    
 
 
 
@@ -56,4 +57,15 @@ class AddZayavkaForm(forms.ModelForm):
     #     self.data = data
            
         
+
+
+class CommentForm(forms.ModelForm):
     
+    class Meta:
+        model = Comments2
+        fields = ('body',)
+    
+    name_class = "form-control form-control-sm fw-bold"    
+    attrs_for_body = {"class" : name_class, "style" : "height: 70px",
+                    'placeholder' : "Введите комментарий"}   
+    body = forms.CharField(widget=forms.Textarea(attrs=attrs_for_body))     
